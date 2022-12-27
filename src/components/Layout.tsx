@@ -11,7 +11,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="min-h-screen w-full bg-black text-lg text-white">
+      <div className="min-h-screen w-full bg-neutral-900 text-white">
         <div className="m-auto w-8/12">
           <NavBar />
           {children}
