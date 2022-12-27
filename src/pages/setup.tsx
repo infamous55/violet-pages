@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { trpc } from "../utils/trpc";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 type Inputs = {
   name: string;
@@ -32,8 +33,8 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
       z.object({
         name: z
           .string()
-          .min(1, { message: "Name is required." })
-          .max(20, { message: "Name must be 20 characters or less." }),
+          .min(1, { message: "Username is required." })
+          .max(13, { message: "Username must be 13 characters or less." }),
         description: z.string(),
         image: z.string().url(),
       })
@@ -83,42 +84,88 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
     }
   };
 
+  const thereAreErrors = () => {
+    if (errors.description || errors.image || errors.name) return true;
+    return false;
+  };
+
   return (
     <>
-      <div className="min-h-screen w-full bg-black text-lg text-white">
-        <div>
-          {isSuccess ? (
-            <p>Success</p>
-          ) : (
-            <div>
+      <div className="flex min-h-screen w-full items-center justify-center bg-neutral-900 py-12 text-white">
+        <div className="w-1/3 rounded-md border border-gray-600 px-8 py-8 drop-shadow-md">
+          {!isSuccess ? (
+            <>
+              <h3 className="mb-4 text-xl font-semibold">Welcome! 🎉</h3>
+              <p className="mb-4">
+                It looks like you're new to this app. Please set up your account
+                by filling in the following details:
+              </p>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                  type="text"
-                  {...register("name")}
-                  disabled={formState.isSubmitting}
-                />
-                {errors.name?.message && <span>{errors.name?.message}</span>}
-                <input
-                  type="text"
-                  {...register("description")}
-                  disabled={formState.isSubmitting}
-                />
-                {errors.description?.message && (
-                  <span>{errors.description?.message}</span>
-                )}
-                <input
-                  type="file"
-                  onChange={handleFileSelect}
-                  disabled={formState.isSubmitting}
-                />
-                {errors.image?.message && <span>{errors.image?.message}</span>}
+                <div className="mb-4">
+                  <label className="mb-2 block font-medium" htmlFor="name">
+                    Username (required):
+                  </label>
+                  <input
+                    className="mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300"
+                    type="text"
+                    {...register("name")}
+                    disabled={formState.isSubmitting}
+                  />
+                  <p className="text-sm text-red-500">
+                    {errors.name?.message && errors.name?.message}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="mb-2 block font-medium"
+                    htmlFor="description"
+                  >
+                    Description (optional):
+                  </label>
+                  <input
+                    type="text"
+                    className="mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300"
+                    {...register("description")}
+                    disabled={formState.isSubmitting}
+                  />
+                  <p className="text-sm text-red-500">
+                    {errors.description?.message && errors.description?.message}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <label className="mb-2 block font-medium" htmlFor="file">
+                    Profile image (optional):
+                  </label>
+                  <input
+                    type="file"
+                    className="mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300"
+                    onChange={handleFileSelect}
+                    disabled={formState.isSubmitting}
+                  />
+                  <p className="text-sm text-red-500">
+                    {errors.image?.message && errors.image?.message}
+                  </p>
+                </div>
                 <input
                   type="submit"
-                  disabled={formState.isSubmitting}
+                  className="cursor-pointer rounded-md border border-gray-600 bg-violet-500 py-1 px-2 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
+                  disabled={formState.isSubmitting || thereAreErrors()}
                   value="Submit"
                 />
               </form>
-            </div>
+            </>
+          ) : (
+            <>
+              <h3 className="mb-4 text-center text-xl font-semibold">
+                Setup completed! 🤗
+              </h3>
+              <Link
+                href="/dashboard"
+                className="inline-block w-full text-center hover:text-gray-300"
+              >
+                Click here to go to the dashboard.
+              </Link>
+            </>
           )}
         </div>
       </div>
