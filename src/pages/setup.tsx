@@ -9,6 +9,7 @@ import { z } from "zod";
 import { trpc } from "../utils/trpc";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 type Inputs = {
   name: string;
@@ -57,6 +58,7 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
   const { mutateAsync: getPresignedUrl } =
     trpc.user.getPresignedUrl.useMutation();
   const { mutateAsync: updateUser } = trpc.user.update.useMutation();
+  const router = useRouter();
 
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -79,8 +81,19 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
     try {
       await updateUser({ ...data, setupCompleted: true });
       setIsSuccess(true);
+      setTimeout(() => router.push("/dashboard"), 3000);
     } catch {
-      toast.error("Something went wrong!");
+      toast.error("Something went wrong!", {
+        icon: "❌",
+        style: {
+          border: "1px solid #4b5563",
+          backgroundColor: "#171717",
+          borderRadius: "0.375rem",
+          color: "#fff",
+          fontSize: "0.875rem",
+          lineHeight: "1.25rem",
+        },
+      });
     }
   };
 
@@ -161,9 +174,9 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
               </h3>
               <Link
                 href="/dashboard"
-                className="inline-block w-full text-center hover:text-gray-300"
+                className="inline-block w-full text-center"
               >
-                Click here to go to the dashboard.
+                Click here if you are not redirected within a few seconds.
               </Link>
             </>
           )}
