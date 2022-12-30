@@ -8,7 +8,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { TRPCError } from "@trpc/server";
 
 const userSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1).max(13),
   image: z.string(),
   description: z.string(),
   setupCompleted: z.boolean(),
