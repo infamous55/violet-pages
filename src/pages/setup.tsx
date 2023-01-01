@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { type NextPage, type GetServerSideProps } from "next";
 import authRequired from "../utils/auth-required";
+import type DeepNonNullable from "../types/deep-non-nullable";
 import type User from "../types/user";
 import { env } from "../env/client.mjs";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -17,7 +18,7 @@ type Inputs = {
   image: string;
 };
 
-const Setup: NextPage<{ user: User }> = ({ user }) => {
+const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
   const {
     register,
     handleSubmit,
@@ -26,9 +27,9 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
     formState,
   } = useForm<Inputs>({
     defaultValues: {
-      name: user.name as string,
+      name: user.name,
       description: user.description,
-      image: user.image as string,
+      image: user.image,
     },
     resolver: zodResolver(
       z.object({
