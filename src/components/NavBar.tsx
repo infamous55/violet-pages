@@ -42,7 +42,7 @@ const NavBar: React.FC = () => {
                   className={`inline-block w-full py-2 px-4 hover:bg-neutral-800 ${
                     active ? "bg-neutral-800" : null
                   }`}
-                  href="#"
+                  href={`/user/${sessionData.user?.id}`}
                 >
                   Signed in as{" "}
                   <strong className="font-semibold">
