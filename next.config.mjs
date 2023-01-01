@@ -13,5 +13,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    // @ts-ignore
+    domains: [process.env.NEXT_PUBLIC_BUCKET_URL.replace("https://", "")],
+  },
 };
 export default config;

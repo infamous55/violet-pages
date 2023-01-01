@@ -1,6 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Menu } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import Image from "next/image";
 import Link from "next/link";
 
 const NavBar: React.FC = () => {
@@ -25,10 +26,13 @@ const NavBar: React.FC = () => {
           <Menu.Button>
             <div className="flex items-center hover:text-gray-300">
               <ChevronDownIcon className="mx-1 h-5 w-5" />
-              <img
+              <Image
+                height={40}
+                width={40}
                 className="h-10 w-10 rounded-full"
                 src={sessionData.user?.image as string}
-              ></img>
+                alt="profile-picture"
+              />
             </div>
           </Menu.Button>
           <Menu.Items className="absolute right-0 mt-2 grid w-36 origin-top-right grid-cols-1 rounded-md border border-gray-600 bg-neutral-900 text-left text-base drop-shadow-md focus:outline-none">
