@@ -1,14 +1,15 @@
 import { type DefaultSession } from "next-auth";
+import type DeepNonNullable from "../types/deep-non-nullable";
 
 declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user?: {
+    user: {
       id: string;
       setupCompleted: boolean;
       description: string;
-    } & DefaultSession["user"];
+    } & DeepNonNullable<Required<DefaultSession["user"]>>;
   }
 }

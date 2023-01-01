@@ -30,7 +30,7 @@ const NavBar: React.FC = () => {
                 height={40}
                 width={40}
                 className="h-10 w-10 rounded-full"
-                src={sessionData.user?.image as string}
+                src={sessionData.user.image}
                 alt="profile-picture"
               />
             </div>
@@ -46,8 +46,8 @@ const NavBar: React.FC = () => {
                 >
                   Signed in as{" "}
                   <strong className="font-semibold">
-                    {sessionData.user?.name?.slice(0, 10)}
-                    {(sessionData.user?.name as string).length > 10 && "..."}
+                    {sessionData.user.name.slice(0, 10)}
+                    {sessionData.user.name.length > 10 && "..."}
                   </strong>
                 </Link>
               )}
