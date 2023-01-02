@@ -14,8 +14,11 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    // @ts-ignore
-    domains: [process.env.NEXT_PUBLIC_BUCKET_URL.replace("https://", "")],
+    domains: [
+      // @ts-ignore
+      process.env.NEXT_PUBLIC_BUCKET_URL.replace("https://", ""),
+      "lh3.googleusercontent.com",
+    ],
   },
 };
 export default config;
