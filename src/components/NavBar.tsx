@@ -83,7 +83,7 @@ const NavBar: React.FC = () => {
                   className={`inline-block py-2 px-4 hover:bg-neutral-800 ${
                     active ? "bg-neutral-800" : null
                   }`}
-                  href="#"
+                  href="/settings"
                 >
                   Settings
                 </Link>

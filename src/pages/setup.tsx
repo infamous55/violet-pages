@@ -76,7 +76,18 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
         data.image = `${env.NEXT_PUBLIC_BUCKET_URL}/${key}`;
       } catch {
         setError("image", {
-          message: "There was a problem uploading your file.",
+          message: "",
+        });
+        toast.error("Couldn't upload your file.", {
+          icon: "❌",
+          style: {
+            border: "1px solid #4b5563",
+            backgroundColor: "#171717",
+            borderRadius: "0.375rem",
+            color: "#fff",
+            fontSize: "0.875rem",
+            lineHeight: "1.25rem",
+          },
         });
         return;
       }
@@ -125,7 +136,9 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                     Username (required):
                   </label>
                   <input
-                    className="mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300"
+                    className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                      errors.name ? "border-red-500" : null
+                    }`}
                     type="text"
                     {...register("name")}
                     disabled={formState.isSubmitting}
@@ -143,7 +156,9 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                   </label>
                   <input
                     type="text"
-                    className="mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300"
+                    className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                      errors.description ? "border-red-500" : null
+                    }`}
                     {...register("description")}
                     disabled={formState.isSubmitting}
                   />
@@ -157,7 +172,9 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                   </label>
                   <input
                     type="file"
-                    className="mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300"
+                    className={`mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                      errors.image ? "border-red-500" : null
+                    }`}
                     onChange={handleFileSelect}
                     disabled={formState.isSubmitting}
                   />
@@ -167,7 +184,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                 </div>
                 <input
                   type="submit"
-                  className="cursor-pointer rounded-md border border-gray-600 bg-violet-500 py-1 px-2 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
+                  className="cursor-pointer rounded-md border border-gray-600 bg-violet-500 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
                   disabled={formState.isSubmitting || thereAreErrors()}
                   value="Submit"
                 />
