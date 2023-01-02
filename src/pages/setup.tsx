@@ -25,6 +25,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
     handleSubmit,
     formState: { errors },
     setError,
+    clearErrors,
     formState,
   } = useForm<Inputs>({
     defaultValues: {
@@ -47,7 +48,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
-    setError("image", { message: "" });
+    clearErrors("image");
     if (file && file.size) {
       if (file.type.indexOf("image") === -1)
         setError("image", { message: "Only images are allowed." });
