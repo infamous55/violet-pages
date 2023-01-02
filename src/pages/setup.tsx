@@ -11,6 +11,7 @@ import { trpc } from "../utils/trpc";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 type Inputs = {
   name: string;
@@ -105,6 +106,9 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
 
   return (
     <>
+      <Head>
+        <title>Account Setup</title>
+      </Head>
       <div className="flex min-h-screen w-full items-center justify-center bg-neutral-900 py-12 text-white">
         <div className="w-11/12 rounded-md border border-gray-600 px-8 py-8 drop-shadow-md sm:w-2/3 md:w-1/3">
           {!isSuccess ? (

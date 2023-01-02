@@ -4,12 +4,16 @@ import { z } from "zod";
 import type DeepNonNullable from "../../types/deep-non-nullable";
 import type User from "../../types/user";
 import { prisma } from "../../server/db/client";
+import Head from "next/head";
 
 type Props = DeepNonNullable<Required<Omit<User, "setupCompleted" | "email">>>;
 
 const Profile: NextPage<Props> = (user) => {
   return (
     <Layout>
+      <Head>
+        <title>{user.name}</title>
+      </Head>
       <h3>{user.name}</h3>
     </Layout>
   );
