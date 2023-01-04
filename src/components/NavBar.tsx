@@ -3,13 +3,53 @@ import { Menu } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import React, { useRef, useEffect } from "react";
 
 const NavBar: React.FC = () => {
   const { data: sessionData } = useSession();
+  const { register, handleSubmit } = useForm<{ query: string }>({
+    resolver: zodResolver(z.object({ query: z.string() })),
+  });
+
+  const searchRef = useRef<HTMLInputElement | null>();
+  const { ref, ...rest } = register("query");
+  useEffect(() => {
+    const element = searchRef.current as HTMLInputElement;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleSubmit(onSubmit)();
+        element.value = "";
+      }
+    };
+    element?.addEventListener("keydown", handler);
+    return () => element?.removeEventListener("keydown", handler);
+  });
+
+  const onSubmit: SubmitHandler<{ query: string }> = (data) => {
+    console.log(data.query);
+  };
 
   return (
     <nav className="flex h-14 w-full items-center justify-between">
-      <span className="text-lg font-semibold">Logo</span>
+      {sessionData ? (
+        <input
+          type="text"
+          className="w-42 block rounded-sm border border-gray-600 bg-neutral-900 py-1 px-2 text-sm text-white focus:border-violet-500 focus:outline-none"
+          placeholder="Search for a book..."
+          autoComplete="off"
+          {...rest}
+          ref={(e) => {
+            ref(e);
+            searchRef.current = e;
+          }}
+        />
+      ) : (
+        <span className="mr-2 text-lg font-semibold">Logo</span>
+      )}
       {!sessionData ? (
         <button
           className="inline-block rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base"
