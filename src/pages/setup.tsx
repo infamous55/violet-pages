@@ -184,7 +184,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                 </div>
                 <input
                   type="submit"
-                  className="cursor-pointer rounded-md border border-gray-600 bg-violet-500 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
+                  className="cursor-pointer rounded-md border border-gray-600 bg-violet-500 py-1 px-4 hover:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
                   disabled={formState.isSubmitting || thereAreErrors()}
                   value="Submit"
                 />

@@ -128,7 +128,7 @@ const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
         <title>Settings</title>
       </Head>
       <Layout>
-        <h3 className="mb-4 text-xl font-semibold">⚙️ Settings</h3>
+        <h3 className="mb-2 text-xl font-semibold">⚙️ Settings</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="max-w-md">
             <div className="mb-4">
@@ -183,7 +183,7 @@ const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
               </label>
               <input
                 type="file"
-                className={`mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                className={`mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:outline-none active:border-violet-500 disabled:text-gray-300 ${
                   errors.image ? "border-red-500" : null
                 }`}
                 onChange={handleFileSelect}
