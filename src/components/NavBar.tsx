@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import React, { useRef, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const NavBar: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -29,8 +30,9 @@ const NavBar: React.FC = () => {
     return () => element?.removeEventListener("keydown", handler);
   });
 
+  const router = useRouter();
   const onSubmit: SubmitHandler<{ query: string }> = (data) => {
-    console.log(data.query);
+    router.push(`/search?query=${encodeURIComponent(data.query)}`);
   };
 
   return (
