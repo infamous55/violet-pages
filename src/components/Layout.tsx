@@ -2,7 +2,7 @@ import Head from "next/head";
 import NavBar from "./NavBar";
 
 type Props = {
-  children?: React.ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
 };
 
 const Layout: React.FC<Props> = ({ children }) => {
