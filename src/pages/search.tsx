@@ -1,6 +1,6 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../components/Layout";
 import { env } from "../env/server.mjs";
 
@@ -16,12 +16,12 @@ type Data = {
         title: string;
         subtitle?: string;
         authors?: [string];
-        description: string;
-        imageLinks?: {
-          thumbnail?: string;
-        };
+        // description: string;
+        // imageLinks?: {
+        //   thumbnail?: string;
+        // };
         publishedDate: string;
-        pageCount: number;
+        // pageCount: number;
       };
     }
   ];
@@ -41,6 +41,7 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
       </Layout>
     );
 
+  const [focus, setFocus] = useState<string>();
   return (
     <Layout>
       <h3 className="mb-2 text-xl font-semibold text-gray-300">
@@ -48,20 +49,47 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
       </h3>
       {data.items.map((item, index) => (
         <React.Fragment key={item.id}>
-          <Link href={`/book/${item.id}}`}>
+          <Link
+            href={`/book/${item.id}`}
+            className="focus:outline-none"
+            onFocus={() => setFocus(item.id)}
+            onBlur={() => setFocus("")}
+          >
             <div
-              className="w-full rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none focus:ring-0"
+              className={`w-full rounded-md bg-neutral-900 py-2 px-2 font-semibold hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
+                focus === item.id ? "bg-neutral-800" : null
+              }`}
               tabIndex={index + 1}
             >
-              <h3 className="font-semibold">{item.volumeInfo.title}</h3>
-              {/* <p
-                dangerouslySetInnerHTML={{
-                  __html: item.searchInfo?.textSnippet || "",
-                }}
-              ></p> */}
+              <h3>{item.volumeInfo.title}</h3>
+              <h5 className="text-sm text-gray-300">
+                {item.volumeInfo.subtitle}
+              </h5>
+              <p className="text-sm italic">
+                <span className="not-italic text-gray-300">by</span>{" "}
+                {!item.volumeInfo.authors
+                  ? "Unknown"
+                  : item.volumeInfo.authors.map(
+                      (author, index) =>
+                        `${author}${
+                          index !==
+                          (item.volumeInfo.authors?.length as number) - 1
+                            ? ", "
+                            : ""
+                        }`
+                    )}
+              </p>
+              {!isNaN(new Date(item.volumeInfo.publishedDate).getTime()) ? (
+                <p className="text-sm text-gray-300">
+                  from{" "}
+                  {new Date(item.volumeInfo.publishedDate)
+                    .getFullYear()
+                    .toString()}
+                </p>
+              ) : null}
             </div>
           </Link>
-          <div className="mb-2"></div>
+          <div className="border-t border-gray-600"></div>
         </React.Fragment>
       ))}
     </Layout>
@@ -70,7 +98,7 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query = context.query["query"];
-  if (typeof query !== "string" || !query)
+  if (typeof query !== "string" || !query.trim())
     return {
       redirect: {
         destination: "/404",
@@ -84,11 +112,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         query
       )}&key=${env.GOOGLE_API_KEY}`
     );
-    const data: Data = await response.json();
+    const data = await response.json();
+    if (!data.totalItems) throw new Error();
 
-    return { props: { query: decodeURIComponent(query), data } };
+    return { props: { query, data } };
   } catch {
-    return { props: { query: decodeURIComponent(query), data: null } };
+    return { props: { query, data: null } };
   }
 };
 

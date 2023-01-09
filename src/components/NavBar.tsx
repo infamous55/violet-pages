@@ -32,7 +32,7 @@ const NavBar: React.FC = () => {
 
   const router = useRouter();
   const onSubmit: SubmitHandler<{ query: string }> = (data) => {
-    router.push(`/search?query=${encodeURIComponent(data.query)}`);
+    if (data.query.trim()) router.push(`/search?query=${data.query}`);
   };
 
   return (
