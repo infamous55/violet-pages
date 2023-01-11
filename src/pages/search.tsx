@@ -27,8 +27,14 @@ type Data = {
   ];
 };
 
-const Search: NextPage<{ query: string; data: Data | null }> = ({
+const generatePageList = (center: number) => {
+  const start = Math.max(1, center - 3);
+  return Array.from({ length: 7 }, (_, i) => start + i);
+};
+
+const Search: NextPage<{ query: string; page: number; data: Data | null }> = ({
   query,
+  page,
   data,
 }) => {
   if (!data)
@@ -41,12 +47,16 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
       </Layout>
     );
 
+  const pageList = generatePageList(page);
   const [focus, setFocus] = useState<string>();
   return (
     <Layout>
       <h3 className="mb-2 text-xl font-semibold text-gray-300">
         🔎 Searched for: <span className="text-white">{query}</span>
       </h3>
+      <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
+        {data.totalItems} entries found
+      </p>
       {data.items.map((item, index) => (
         <React.Fragment key={item.id}>
           <Link
@@ -92,6 +102,29 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
           <div className="border-t border-gray-600"></div>
         </React.Fragment>
       ))}
+      <div className="mt-2 flex w-full justify-center">
+        {pageList.map((pageNumber) => (
+          <Link
+            href={
+              pageNumber <= Math.ceil(data.totalItems / 10)
+                ? `/search?query=${query}&page=${pageNumber}`
+                : "#"
+            }
+          >
+            <span
+              className={`mr-2 inline-block rounded-md border border-gray-600 bg-neutral-900 px-1.5 py-0.5 text-sm hover:bg-neutral-800 ${
+                page === pageNumber ? "border-violet-500" : null
+              } ${
+                pageNumber <= Math.ceil(data.totalItems / 10)
+                  ? "bg-neutral-800 text-gray-300"
+                  : null
+              }`}
+            >
+              {pageNumber}
+            </span>
+          </Link>
+        ))}
+      </div>
     </Layout>
   );
 };
@@ -106,18 +139,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
 
+  let page;
+  if (
+    typeof context.query["page"] !== "string" ||
+    isNaN(parseInt(context.query["page"])) ||
+    parseInt(context.query["page"]) < 1
+  )
+    page = 1;
+  else page = parseInt(context.query["page"]);
+
   try {
     const response = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
         query
-      )}&key=${env.GOOGLE_API_KEY}`
+      )}&startIndex=${(page - 1) * 10}&key=${env.GOOGLE_API_KEY}`
     );
     const data = await response.json();
-    if (!data.totalItems) throw new Error();
+    if (!data.totalItems || !data.items) throw new Error();
 
-    return { props: { query, data } };
+    return { props: { query, page, data } };
   } catch {
-    return { props: { query, data: null } };
+    return { props: { query, page, data: null } };
   }
 };
 
