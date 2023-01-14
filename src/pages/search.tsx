@@ -1,8 +1,22 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Layout from "../components/Layout";
 import { env } from "../env/server.mjs";
+import { trpc } from "../utils/trpc";
+import useAuth from "../utils/useAuth";
+
+function usePrevious<T>(value: T) {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
+
+function isNumber(x: any): x is number {
+  return typeof x === "number";
+}
 
 type Data = {
   totalItems: number;
@@ -27,14 +41,8 @@ type Data = {
   ];
 };
 
-const generatePageList = (center: number) => {
-  const start = Math.max(1, center - 3);
-  return Array.from({ length: 7 }, (_, i) => start + i);
-};
-
-const Search: NextPage<{ query: string; page: number; data: Data | null }> = ({
+const Search: NextPage<{ query: string; data: Data | null }> = ({
   query,
-  page,
   data,
 }) => {
   if (!data)
@@ -47,7 +55,52 @@ const Search: NextPage<{ query: string; page: number; data: Data | null }> = ({
       </Layout>
     );
 
-  const pageList = generatePageList(page);
+  const [results, setResults] = useState<Data | undefined>(data);
+  const [nextResults, setNextResults] = useState<Data | undefined>();
+  const [page, setPage] = useState<number>(1);
+  const previousPage = usePrevious<number>(page);
+
+  const {
+    refetch: fetchNextPageResults,
+    isFetching,
+    isError,
+  } = trpc.search.getResultsPage.useQuery(
+    { query, page: page + 1 },
+    {
+      enabled: false,
+      onSettled: (data, error) => {
+        if (!error) setNextResults(data);
+        else setNextResults(undefined);
+      },
+    }
+  );
+  const { refetch: fetchCurrentPageResults } =
+    trpc.search.getResultsPage.useQuery(
+      { query, page },
+      {
+        enabled: false,
+        onSuccess: (data) => {
+          setResults(data);
+        },
+      }
+    );
+
+  useEffect(() => {
+    setPage(1);
+  }, [data]);
+
+  useEffect(() => {
+    if (isNumber(previousPage)) {
+      if (previousPage < page) {
+        setResults(nextResults);
+        fetchNextPageResults();
+      } else {
+        setNextResults(results);
+        fetchCurrentPageResults();
+      }
+    } else fetchNextPageResults();
+  }, [page]);
+
   const [focus, setFocus] = useState<string>();
   return (
     <Layout>
@@ -55,9 +108,9 @@ const Search: NextPage<{ query: string; page: number; data: Data | null }> = ({
         🔎 Searched for: <span className="text-white">{query}</span>
       </h3>
       <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
-        {data.totalItems} entries found
+        {results?.totalItems} entries found
       </p>
-      {data.items.map((item, index) => (
+      {results?.items.map((item, index) => (
         <React.Fragment key={item.id}>
           <Link
             href={`/book/${item.id}`}
@@ -102,34 +155,38 @@ const Search: NextPage<{ query: string; page: number; data: Data | null }> = ({
           <div className="border-t border-gray-600"></div>
         </React.Fragment>
       ))}
-      <div className="mt-2 flex w-full justify-center">
-        {pageList.map((pageNumber) => (
-          <Link
-            href={
-              pageNumber <= Math.ceil(data.totalItems / 10)
-                ? `/search?query=${query}&page=${pageNumber}`
-                : "#"
-            }
-          >
-            <span
-              className={`mr-2 inline-block rounded-md border border-gray-600 bg-neutral-900 px-1.5 py-0.5 text-sm hover:bg-neutral-800 ${
-                page === pageNumber ? "border-violet-500" : null
-              } ${
-                pageNumber <= Math.ceil(data.totalItems / 10)
-                  ? "bg-neutral-800 text-gray-300"
-                  : null
-              }`}
-            >
-              {pageNumber}
-            </span>
-          </Link>
-        ))}
+      <div className="mt-2 flex w-full justify-between">
+        <button
+          onClick={() => {
+            if (page > 1) setPage(page - 1);
+          }}
+          disabled={page < 2}
+        >
+          Previous
+        </button>
+        <button
+          onClick={() => {
+            setPage(page + 1);
+          }}
+          disabled={isFetching || isError}
+        >
+          Next
+        </button>
       </div>
     </Layout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { redirectDestination } = await useAuth(context);
+  if (redirectDestination)
+    return {
+      redirect: {
+        destination: redirectDestination,
+        permanent: false,
+      },
+    };
+
   const query = context.query["query"];
   if (typeof query !== "string" || !query.trim())
     return {
@@ -139,27 +196,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
 
-  let page;
-  if (
-    typeof context.query["page"] !== "string" ||
-    isNaN(parseInt(context.query["page"])) ||
-    parseInt(context.query["page"]) < 1
-  )
-    page = 1;
-  else page = parseInt(context.query["page"]);
-
   try {
     const response = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
         query
-      )}&startIndex=${(page - 1) * 10}&key=${env.GOOGLE_API_KEY}`
+      )}&key=${env.GOOGLE_API_KEY}`
     );
     const data = await response.json();
     if (!data.totalItems || !data.items) throw new Error();
 
-    return { props: { query, page, data } };
+    return { props: { query, data } };
   } catch {
-    return { props: { query, page, data: null } };
+    return { props: { query, data: null } };
   }
 };
 
