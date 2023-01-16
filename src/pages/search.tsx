@@ -1,6 +1,6 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, LegacyRef } from "react";
 import Layout from "../components/Layout";
 import { env } from "../env/server.mjs";
 import { trpc } from "../utils/trpc";
@@ -55,10 +55,11 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
       </Layout>
     );
 
+  const totalItems = data.totalItems;
   const [results, setResults] = useState<Data | undefined>(data);
   const [nextResults, setNextResults] = useState<Data | undefined>();
   const [page, setPage] = useState<number>(1);
-  const previousPage = usePrevious<number>(page);
+  let previousPage = usePrevious<number>(page);
 
   const {
     refetch: fetchNextPageResults,
@@ -86,7 +87,10 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
     );
 
   useEffect(() => {
+    previousPage = undefined;
     setPage(1);
+    setResults(data);
+    fetchNextPageResults();
   }, [data]);
 
   useEffect(() => {
@@ -98,17 +102,18 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
         setNextResults(results);
         fetchCurrentPageResults();
       }
-    } else fetchNextPageResults();
+    }
   }, [page]);
 
   const [focus, setFocus] = useState<string>();
+  const ref = useRef<HTMLButtonElement>(null);
   return (
     <Layout>
       <h3 className="mb-2 text-xl font-semibold text-gray-300">
         🔎 Searched for: <span className="text-white">{query}</span>
       </h3>
       <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
-        {results?.totalItems} entries found
+        {totalItems} entries found
       </p>
       {results?.items.map((item, index) => (
         <React.Fragment key={item.id}>
@@ -155,12 +160,14 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
           <div className="border-t border-gray-600"></div>
         </React.Fragment>
       ))}
-      <div className="mt-2 flex w-full justify-between">
+      <div className="mt-3 flex w-full justify-between">
         <button
           onClick={() => {
             if (page > 1) setPage(page - 1);
           }}
           disabled={page < 2}
+          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
+          ref={ref}
         >
           Previous
         </button>
@@ -169,6 +176,8 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
             setPage(page + 1);
           }}
           disabled={isFetching || isError}
+          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
+          style={{ width: ref.current?.offsetWidth || "70px" }}
         >
           Next
         </button>
