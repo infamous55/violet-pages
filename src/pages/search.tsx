@@ -149,10 +149,10 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
               </p>
               {!isNaN(new Date(item.volumeInfo.publishedDate).getTime()) ? (
                 <p className="text-sm text-gray-300">
-                  from{" "}
                   {new Date(item.volumeInfo.publishedDate)
                     .getFullYear()
-                    .toString()}
+                    .toString()}{" "}
+                  edition
                 </p>
               ) : null}
             </div>
