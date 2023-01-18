@@ -47,6 +47,7 @@ model User {
   description    String    @default("") @db.Text
   accounts       Account[]
   sessions       Session[]
+  lists          List[]
 }
 
 model VerificationToken {
@@ -55,4 +56,24 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model List {
+  id          String  @id @default(cuid())
+  name        String
+  description String  @default("") @db.Text
+  public      Boolean @default(false)
+  authorId    String
+  author      User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  books       Book[]
+
+  @@unique([authorId, name])
+  @@index([authorId])
+}
+
+model Book {
+  googleId String
+  lists    List[]
+
+  @@id([googleId])
 }
