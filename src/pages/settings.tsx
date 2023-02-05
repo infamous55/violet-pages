@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { trpc } from "../utils/trpc";
 import { env } from "../env/client.mjs";
-import toast from "react-hot-toast";
+import toast from "../utils/toast";
 
 type Inputs = {
   name: string;
@@ -75,45 +75,15 @@ const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
         setError("image", {
           message: "",
         });
-        toast.error("Couldn't upload your file.", {
-          icon: "❌",
-          style: {
-            border: "1px solid #4b5563",
-            backgroundColor: "#171717",
-            borderRadius: "0.375rem",
-            color: "#fff",
-            fontSize: "0.875rem",
-            lineHeight: "1.25rem",
-          },
-        });
+        toast.error("Couldn't upload your file.");
         return;
       }
     }
     try {
       await updateUser({ ...data, setupCompleted: true });
-      toast.success("Account settings saved!", {
-        icon: "✅",
-        style: {
-          border: "1px solid #4b5563",
-          backgroundColor: "#171717",
-          borderRadius: "0.375rem",
-          color: "#fff",
-          fontSize: "0.875rem",
-          lineHeight: "1.25rem",
-        },
-      });
+      toast.success("Account settings saved!");
     } catch {
-      toast.error("Something went wrong!", {
-        icon: "❌",
-        style: {
-          border: "1px solid #4b5563",
-          backgroundColor: "#171717",
-          borderRadius: "0.375rem",
-          color: "#fff",
-          fontSize: "0.875rem",
-          lineHeight: "1.25rem",
-        },
-      });
+      toast.error("Something went wrong!");
     }
   };
 

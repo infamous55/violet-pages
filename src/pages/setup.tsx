@@ -8,7 +8,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { trpc } from "../utils/trpc";
-import { toast } from "react-hot-toast";
+import toast from "../utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -78,17 +78,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
         setError("image", {
           message: "",
         });
-        toast.error("Couldn't upload your file.", {
-          icon: "❌",
-          style: {
-            border: "1px solid #4b5563",
-            backgroundColor: "#171717",
-            borderRadius: "0.375rem",
-            color: "#fff",
-            fontSize: "0.875rem",
-            lineHeight: "1.25rem",
-          },
-        });
+        toast.error("Couldn't upload your file.");
         return;
       }
     }
@@ -97,17 +87,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
       setIsSuccess(true);
       setTimeout(() => router.push("/dashboard"), 3000);
     } catch {
-      toast.error("Something went wrong!", {
-        icon: "❌",
-        style: {
-          border: "1px solid #4b5563",
-          backgroundColor: "#171717",
-          borderRadius: "0.375rem",
-          color: "#fff",
-          fontSize: "0.875rem",
-          lineHeight: "1.25rem",
-        },
-      });
+      toast.error("Something went wrong!");
     }
   };
 
