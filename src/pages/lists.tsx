@@ -25,6 +25,7 @@ const CustomSwitch = (props: UseControllerProps<Inputs>) => {
       <Switch
         checked={Boolean(value)}
         onChange={onChange}
+        disabled={isSubmitting}
         className={`relative	inline-flex h-5 w-10 flex-shrink-0 cursor-pointer self-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
           value ? "bg-violet-700" : "bg-gray-700"
         }`}
@@ -98,7 +99,7 @@ const Lists: NextPage = () => {
               </p>
             </div>
             <button
-              className="relative inline-flex cursor-pointer items-center rounded-md border border-gray-600 bg-violet-500 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none"
+              className="relative inline-flex cursor-pointer items-center rounded-md border border-gray-600 bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none"
               onClick={() => setIsOpen(true)}
             >
               <PlusIcon className="-mb-0.5 mr-1 h-4 w-4" />
@@ -117,7 +118,7 @@ const Lists: NextPage = () => {
                 <div className="flex w-11/12 items-center justify-center py-4 md:w-8/12">
                   <Dialog.Panel className="w-full max-w-md overflow-hidden rounded-md border border-gray-600 bg-neutral-900 p-4 align-middle text-white drop-shadow-md">
                     <Dialog.Title className="mb-4 text-xl font-semibold">
-                      New list
+                      📋 New list
                     </Dialog.Title>
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="mb-4">
@@ -160,10 +161,7 @@ const Lists: NextPage = () => {
                         </p>
                       </div>
                       <Switch.Group as="div" className="mb-4 flex">
-                        <Switch.Label
-                          className="mr-4 block font-medium"
-                          passive
-                        >
+                        <Switch.Label className="mr-4 font-medium" passive>
                           Public:
                         </Switch.Label>
                         <CustomSwitch name="public" control={control} />
@@ -171,7 +169,7 @@ const Lists: NextPage = () => {
                       <div>
                         <input
                           type="submit"
-                          className="mr-2 cursor-pointer rounded-md border border-gray-600 bg-violet-500 py-1 px-4 hover:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
+                          className="mr-4 cursor-pointer rounded-md border border-gray-600 bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
                           disabled={formState.isSubmitting || thereAreErrors()}
                           value="Submit"
                         />
