@@ -6,6 +6,7 @@ import { v4 } from "uuid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { TRPCError } from "@trpc/server";
+import type User from "../../../types/user";
 
 const userSchema = z.object({
   name: z.string().min(1).max(13),
@@ -19,7 +20,7 @@ export const userRouter = router({
     .input(userSchema.partial())
     .mutation(async ({ input, ctx }) => {
       try {
-        const updatedUser = await prisma.user.update({
+        const updatedUser: User = await prisma.user.update({
           where: {
             id: ctx.session.user.id,
           },
