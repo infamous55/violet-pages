@@ -13,6 +13,10 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { trpc } from "../utils/trpc";
+import toast from "../utils/toast";
+import { TRPCClientError } from "@trpc/client";
+import { AppRouter } from "../server/trpc/router/_app";
 
 const CustomSwitch = (props: UseControllerProps<Inputs>) => {
   const {
@@ -57,7 +61,6 @@ const Lists: NextPage = () => {
     reset,
     control,
   } = useForm<Inputs>({
-    mode: "onTouched",
     defaultValues: { name: "", description: "", public: false },
     resolver: zodResolver(
       z.object({
@@ -71,12 +74,22 @@ const Lists: NextPage = () => {
     ),
   });
 
-  const timeout = (delay: number) => {
-    return new Promise((res) => setTimeout(res, delay));
+  const cancel = () => {
+    setIsOpen(false);
+    reset();
   };
+
+  const { mutateAsync: createList } = trpc.list.create.useMutation();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
-    await timeout(3000);
+    try {
+      await createList(data);
+      cancel();
+      toast.success("New list created!");
+    } catch (error) {
+      if (error instanceof TRPCClientError<AppRouter> && error.message)
+        toast.error(error.message);
+      else toast.error("Something went wrong!");
+    }
   };
 
   const thereAreErrors = () => {
@@ -176,10 +189,7 @@ const Lists: NextPage = () => {
                         <button
                           className="cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
                           disabled={formState.isSubmitting}
-                          onClick={() => {
-                            setIsOpen(false);
-                            reset();
-                          }}
+                          onClick={cancel}
                         >
                           Cancel
                         </button>
