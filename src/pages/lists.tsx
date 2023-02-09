@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import useAuth from "../utils/useAuth";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dialog, Switch } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   type UseControllerProps,
   SubmitHandler,
@@ -17,6 +17,7 @@ import { trpc } from "../utils/trpc";
 import toast from "../utils/toast";
 import { TRPCClientError } from "@trpc/client";
 import { AppRouter } from "../server/trpc/router/_app";
+import Link from "next/link";
 
 const CustomSwitch = (props: UseControllerProps<Inputs>) => {
   const {
@@ -30,7 +31,7 @@ const CustomSwitch = (props: UseControllerProps<Inputs>) => {
         checked={Boolean(value)}
         onChange={onChange}
         disabled={isSubmitting}
-        className={`relative	inline-flex h-5 w-10 flex-shrink-0 cursor-pointer self-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+        className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer self-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:border-violet-600 focus:outline-none ${
           value ? "bg-violet-700" : "bg-gray-700"
         }`}
       >
@@ -51,7 +52,19 @@ type Inputs = {
 };
 
 const Lists: NextPage = () => {
+  const utils = trpc.useContext();
+  const lists = trpc.list.getAll.useQuery();
+
+  const [focus, setFocus] = useState<string>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) cancel();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  });
 
   const {
     register,
@@ -85,6 +98,7 @@ const Lists: NextPage = () => {
       await createList(data);
       cancel();
       toast.success("New list created!");
+      utils.list.getAll.invalidate();
     } catch (error) {
       if (error instanceof TRPCClientError<AppRouter> && error.message)
         toast.error(error.message);
@@ -107,8 +121,8 @@ const Lists: NextPage = () => {
           <div className="flex items-start justify-between">
             <div>
               <h3 className="mb-2 text-xl font-semibold">📋 Lists</h3>
-              <p>
-                <span className="text-gray-300">Total number of lists:</span> 3
+              <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
+                {lists.data?.length || 0} lists in total
               </p>
             </div>
             <button
@@ -182,7 +196,7 @@ const Lists: NextPage = () => {
                       <div>
                         <input
                           type="submit"
-                          className="mr-4 cursor-pointer rounded-md border border-gray-600 bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
+                          className="mr-4 cursor-pointer rounded-md border border-gray-600 bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
                           disabled={formState.isSubmitting || thereAreErrors()}
                           value="Submit"
                         />
@@ -200,6 +214,27 @@ const Lists: NextPage = () => {
               </div>
             </div>
           </Dialog>
+          <div className="w-full">
+            {lists.data?.map((list, index) => (
+              <Link
+                href={`/list/${list.id}`}
+                className="focus:outline-none"
+                onFocus={() => setFocus(list.id)}
+                onBlur={() => setFocus("")}
+              >
+                <div
+                  key={list.id}
+                  className={`w-full rounded-md py-2 px-2 font-semibold hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
+                    focus === list.id ? "bg-neutral-800" : null
+                  }`}
+                  tabIndex={index + 1}
+                >
+                  <p>{list.name}</p>
+                </div>
+                <div className="border-t border-gray-600"></div>
+              </Link>
+            ))}
+          </div>
         </div>
       </Layout>
     </>

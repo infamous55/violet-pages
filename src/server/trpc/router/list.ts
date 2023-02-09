@@ -31,4 +31,18 @@ export const listRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message });
       }
     }),
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const lists = await prisma.list.findMany({
+        where: { authorId: ctx.session.user.id },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      return lists;
+    } catch (error) {
+      console.error(error);
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+  }),
 });
