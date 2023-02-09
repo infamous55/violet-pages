@@ -231,7 +231,11 @@ const Lists: NextPage = () => {
                 >
                   <p>{list.name}</p>
                 </div>
-                <div className="border-t border-gray-600"></div>
+                <div
+                  className="border-t border-gray-600"
+                  onMouseOver={() => setFocus(list.id)}
+                  onMouseLeave={() => setFocus("")}
+                ></div>
               </Link>
             ))}
           </div>

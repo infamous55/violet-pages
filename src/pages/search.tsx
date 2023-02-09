@@ -157,7 +157,11 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
               ) : null}
             </div>
           </Link>
-          <div className="border-t border-gray-600"></div>
+          <div
+            className="border-t border-gray-600"
+            onMouseOver={() => setFocus(item.id)}
+            onMouseLeave={() => setFocus("")}
+          ></div>
         </React.Fragment>
       ))}
       <div className="mt-3 flex w-full justify-between">
