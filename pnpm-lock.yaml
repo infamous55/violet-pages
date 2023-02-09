@@ -24,7 +24,6 @@ specifiers:
   dotenv: ^16.0.3
   eslint: ^8.33.0
   eslint-config-next: 13.0.2
-  install: ^0.13.0
   next: 13.0.2
   next-auth: 4.17.0
   postcss: ^8.4.21
@@ -56,7 +55,6 @@ dependencies:
   '@trpc/server': 10.9.1
   '@types/uuid': 9.0.0
   csstype: 3.0.10
-  install: 0.13.0
   next: 13.0.2_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.17.0_pknogjuzx4bv7zxtatcb2ahtsq
   react: 18.2.0
@@ -2655,11 +2653,6 @@ packages:
   /inherits/2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
     dev: true
-
-  /install/0.13.0:
-    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
-    engines: {node: '>= 0.10'}
-    dev: false
 
   /internal-slot/1.0.4:
     resolution: {integrity: sha512-tA8URYccNzMo94s5MQZgH8NB/XTa6HsOo0MLfXTKKEnHVVdegzaQoFZ7Jp44bdvLvY2waT5dc+j5ICEswhi7UQ==}
