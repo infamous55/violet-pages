@@ -2,7 +2,7 @@ import { type GetServerSideProps, type NextPage } from "next";
 import Head from "next/head";
 import Layout from "../components/Layout";
 import useAuth from "../utils/useAuth";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ClipboardIcon } from "@heroicons/react/24/outline";
 import { Dialog, Switch } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import {
@@ -224,12 +224,15 @@ const Lists: NextPage = () => {
               >
                 <div
                   key={list.id}
-                  className={`w-full rounded-md py-2 px-2 font-semibold hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
+                  className={`flex w-full justify-between rounded-md py-2 px-2 font-semibold hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
                     focus === list.id ? "bg-neutral-800" : null
                   }`}
                   tabIndex={index + 1}
                 >
                   <p>{list.name}</p>
+                  {/* <button>
+                    <ClipboardIcon className="h-4 w-4 text-gray-300" />
+                  </button> */}
                 </div>
                 <div
                   className="border-t border-gray-600"
