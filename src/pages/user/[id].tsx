@@ -5,6 +5,7 @@ import type DeepNonNullable from "../../types/deep-non-nullable";
 import type User from "../../types/user";
 import { prisma } from "../../server/db/client";
 import Head from "next/head";
+import isCUID from "../../utils/isCuid";
 
 type Props = DeepNonNullable<Required<Omit<User, "setupCompleted" | "email">>>;
 
@@ -17,11 +18,6 @@ const Profile: NextPage<Props> = (user) => {
       <h3>{user.name}</h3>
     </Layout>
   );
-};
-
-const isCUID = (data: any): data is string => {
-  if (z.string().cuid().safeParse(data).success) return true;
-  return false;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
