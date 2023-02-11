@@ -20,5 +20,8 @@ const config = {
       "lh3.googleusercontent.com",
     ],
   },
+  experimental: {
+    swcPlugins: [["next-superjson-plugin", {}]],
+  },
 };
 export default config;
