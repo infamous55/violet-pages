@@ -3,7 +3,7 @@ import { z } from "zod";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../db/client";
 import { TRPCError } from "@trpc/server";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const listSchema = z.object({
   name: z.string().min(1).max(25),
