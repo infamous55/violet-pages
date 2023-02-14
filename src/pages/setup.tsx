@@ -105,7 +105,9 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
         <div className="w-11/12 rounded-md border border-gray-600 px-8 py-8 drop-shadow-md sm:w-2/3 md:w-1/3">
           {!isSuccess ? (
             <>
-              <h3 className="mb-4 text-xl font-semibold">Welcome! 🎉</h3>
+              <h3 className="mb-4 text-xl font-semibold">
+                Welcome!<span className="select-none"> 🎉</span>
+              </h3>
               <p className="mb-4">
                 It looks like you're new to this app. Please set up your account
                 by filling in the following details:
@@ -173,7 +175,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
           ) : (
             <>
               <h3 className="mb-4 text-center text-xl font-semibold">
-                Setup completed! 🤗
+                Setup completed!<span className="select-none"> 🤗</span>
               </h3>
               <Link
                 href="/dashboard"

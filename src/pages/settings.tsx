@@ -98,7 +98,9 @@ const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
         <title>Settings</title>
       </Head>
       <Layout>
-        <h3 className="mb-2 text-xl font-semibold">⚙️ Settings</h3>
+        <h3 className="mb-2 text-xl font-semibold">
+          <span className="select-none">⚙️ </span>Settings
+        </h3>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="max-w-md">
             <div className="mb-4">
