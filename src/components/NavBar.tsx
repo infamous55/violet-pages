@@ -40,7 +40,7 @@ const NavBar: React.FC = () => {
       {sessionData ? (
         <input
           type="text"
-          className="w-42 block rounded-sm border border-gray-600 bg-neutral-900 py-1 px-2 text-sm text-white focus:border-violet-500 focus:outline-none"
+          className="w-42 block rounded-sm border border-gray-600 bg-neutral-900 py-1 px-2 text-sm text-white focus:border-violet-600 focus:outline-none"
           placeholder="Search for a book..."
           autoComplete="off"
           {...rest}

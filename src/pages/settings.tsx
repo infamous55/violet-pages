@@ -108,7 +108,7 @@ const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                 Username:
               </label>
               <input
-                className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-600 focus:outline-none disabled:text-gray-300 ${
                   errors.name ? "border-red-500" : null
                 }`}
                 type="text"
@@ -139,7 +139,7 @@ const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
               </label>
               <input
                 type="text"
-                className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-600 focus:outline-none disabled:text-gray-300 ${
                   errors.description ? "border-red-500" : null
                 }`}
                 {...register("description")}

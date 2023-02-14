@@ -118,7 +118,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                     Username (required):
                   </label>
                   <input
-                    className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                    className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-600 focus:outline-none disabled:text-gray-300 ${
                       errors.name ? "border-red-500" : null
                     }`}
                     type="text"
@@ -138,7 +138,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                   </label>
                   <input
                     type="text"
-                    className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                    className={`mb-2 block w-full rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white focus:border-violet-600 focus:outline-none disabled:text-gray-300 ${
                       errors.description ? "border-red-500" : null
                     }`}
                     {...register("description")}
@@ -154,7 +154,7 @@ const Setup: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
                   </label>
                   <input
                     type="file"
-                    className={`mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:border-violet-500 focus:outline-none disabled:text-gray-300 ${
+                    className={`mb-2 block w-full cursor-pointer rounded-sm border border-gray-600 bg-gray-700 py-1 px-2 text-white file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-700 file:pr-2 file:text-white focus:border-violet-600 focus:outline-none disabled:text-gray-300 ${
                       errors.image ? "border-red-500" : null
                     }`}
                     onChange={handleFileSelect}
