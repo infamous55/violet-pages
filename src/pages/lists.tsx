@@ -5,12 +5,7 @@ import useAuth from "../utils/useAuth";
 import { PlusIcon, ClipboardIcon } from "@heroicons/react/24/outline";
 import { Dialog, Switch } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import {
-  type UseControllerProps,
-  SubmitHandler,
-  useController,
-  useForm,
-} from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { trpc } from "../utils/trpc";
@@ -18,32 +13,8 @@ import toast from "../utils/toast";
 import { TRPCClientError } from "@trpc/client";
 import { AppRouter } from "../server/trpc/router/_app";
 import Link from "next/link";
-
-const CustomSwitch = (props: UseControllerProps<Inputs>) => {
-  const {
-    field: { value, onChange },
-    formState: { isSubmitting },
-  } = useController(props);
-
-  return (
-    <>
-      <Switch
-        checked={Boolean(value)}
-        onChange={onChange}
-        disabled={isSubmitting}
-        className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer self-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:border-violet-600 focus:outline-none ${
-          value ? "bg-violet-700" : "bg-gray-700"
-        }`}
-      >
-        <span
-          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full shadow ring-0 transition duration-200 ease-in-out ${
-            isSubmitting ? "bg-gray-300" : "bg-white"
-          } ${value ? "translate-x-5" : "translate-x-0"}`}
-        />
-      </Switch>
-    </>
-  );
-};
+import CustomSwitch from "../components/CustomSwitch";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 
 type Inputs = {
   name: string;
@@ -120,7 +91,9 @@ const Lists: NextPage = () => {
         <div>
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="mb-2 text-xl font-semibold">📋 Lists</h3>
+              <h3 className="mb-2 text-xl font-semibold">
+                <span className="select-none">📋 </span>Lists
+              </h3>
               <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
                 {lists.data?.length || 0} lists in total
               </p>
@@ -144,8 +117,12 @@ const Lists: NextPage = () => {
               <div className="flex min-h-full items-center justify-center">
                 <div className="flex w-11/12 items-center justify-center py-4 md:w-8/12">
                   <Dialog.Panel className="w-full max-w-md overflow-hidden rounded-md border border-gray-600 bg-neutral-900 p-4 align-middle text-white drop-shadow-md">
-                    <Dialog.Title className="mb-4 text-xl font-semibold">
-                      📋 New list
+                    <Dialog.Title
+                      as="div"
+                      className="mb-4 flex text-xl font-semibold"
+                    >
+                      <PlusCircleIcon className="-mb-0.5 mr-1 h-5 w-5 self-center text-violet-600" />
+                      <h3>New list</h3>
                     </Dialog.Title>
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="mb-4">
@@ -191,7 +168,7 @@ const Lists: NextPage = () => {
                         <Switch.Label className="mr-4 font-medium" passive>
                           Public:
                         </Switch.Label>
-                        <CustomSwitch name="public" control={control} />
+                        <CustomSwitch<Inputs> name="public" control={control} />
                       </Switch.Group>
                       <div>
                         <input
