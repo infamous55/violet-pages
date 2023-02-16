@@ -45,4 +45,20 @@ export const listRouter = router({
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }
   }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const list = await prisma.list.findUnique({ where: { id: input.id } });
+        if (!list) throw new TRPCError({ code: "NOT_FOUND" });
+        if (list.authorId !== ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+
+        await prisma.list.delete({ where: { id: input.id } });
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
 });
