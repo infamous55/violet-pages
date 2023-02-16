@@ -170,7 +170,7 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
             if (page > 1) setPage(page - 1);
           }}
           disabled={page < 2}
-          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
+          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
           ref={ref}
         >
           Previous
@@ -180,7 +180,7 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
             setPage(page + 1);
           }}
           disabled={isFetching || isError}
-          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
+          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
           style={{ width: ref.current?.offsetWidth || "70px" }}
         >
           Next
