@@ -1,6 +1,5 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { env } from "../../../env/server.mjs";
 import { prisma } from "../../db/client";
 import { TRPCError } from "@trpc/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -55,6 +54,27 @@ export const listRouter = router({
           throw new TRPCError({ code: "FORBIDDEN" });
 
         await prisma.list.delete({ where: { id: input.id } });
+        return;
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
+  update: protectedProcedure
+    .input(listSchema.extend({ id: z.string().cuid() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const list = await prisma.list.findUnique({ where: { id: input.id } });
+        if (!list) throw new TRPCError({ code: "NOT_FOUND" });
+        if (list.authorId !== ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+
+        const updatedList = prisma.list.update({
+          where: { id: input.id },
+          data: input,
+        });
+        return updatedList;
       } catch (error) {
         console.error(error);
         if (error instanceof TRPCError) throw error;

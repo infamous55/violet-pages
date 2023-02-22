@@ -3,14 +3,19 @@ import Layout from "../../components/Layout";
 import isCUID from "../../utils/isCuid";
 import useAuth from "../../utils/useAuth";
 import { prisma } from "../../server/db/client";
-import { type List, type Book } from "@prisma/client";
+import type { List, Book } from "@prisma/client";
 import Head from "next/head";
-import { PencilIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
-import CustomSwitch from "../../components/CustomSwitch";
-import { Switch } from "@headlessui/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { PencilSquareIcon } from "@heroicons/react/20/solid";
+import type { SubmitHandler } from "react-hook-form";
+import { useEffect, useState } from "react";
+import DialogWindow from "../../components/DialogWindow";
+import { Dialog } from "@headlessui/react";
+import { EllipsisHorizontalCircleIcon } from "@heroicons/react/20/solid";
+import ListForm from "../../components/ListForm";
+import type ListFormInputs from "../../types/list-form-inputs";
+import { trpc } from "../../utils/trpc";
+import toast from "../../utils/toast";
+import { useRouter } from "next/router";
 
 type ExtendedList = List & {
   books: Book[];
@@ -21,30 +26,29 @@ type Props = {
   isAuthor: boolean;
 };
 
-// type Inputs = {
-//   name: string;
-//   description: string;
-//   public: boolean;
-// };
-
 const List: NextPage<Props> = ({ list, isAuthor }) => {
-  // const { control } = useForm<Inputs>({
-  //   defaultValues: {
-  //     name: list.name,
-  //     description: list.description,
-  //     public: list.public,
-  //   },
-  //   resolver: zodResolver(
-  //     z.object({
-  //       name: z
-  //         .string()
-  //         .min(1, { message: "List name is required." })
-  //         .max(25, { message: "List name must be 25 characters or less." }),
-  //       description: z.string(),
-  //       public: z.boolean(),
-  //     })
-  //   ),
-  // });
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen) setIsOpen(false);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  });
+
+  const router = useRouter();
+  const { mutateAsync: updateList } = trpc.list.update.useMutation();
+  const submit: SubmitHandler<ListFormInputs> = async (data) => {
+    try {
+      await updateList({ ...data, id: list.id });
+      setIsOpen(false);
+      toast.success("List updated!");
+      router.replace(router.asPath);
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <Layout>
@@ -53,29 +57,28 @@ const List: NextPage<Props> = ({ list, isAuthor }) => {
       </Head>
       <div>
         <div className="flex items-start justify-between">
-          {/* <div className="inline-flex"> */}
-          {/* {isAuthor && (
-              <PencilSquareIcon className="mr-1 -mt-1.5 h-5 w-5 cursor-pointer self-center text-violet-600 hover:text-violet-700" />
-            )} */}
           <h3 className="mb-2 text-xl font-semibold">{list.name}</h3>
-          {/* </div> */}
-          {/* {isAuthor && (
-            <div>
-              <Switch.Group as="div" className="mb-4 flex">
-                <Switch.Label className="mr-2 font-medium" passive>
-                  Public:
-                </Switch.Label>
-                <CustomSwitch name="public" control={control} />
-              </Switch.Group>
-            </div>
-          )} */}
           {isAuthor && (
-            <button className="relative inline-flex cursor-pointer items-center rounded-md border border-gray-600 bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none">
+            <button
+              className="relative inline-flex cursor-pointer items-center rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none"
+              onClick={() => setIsOpen(true)}
+            >
               <PencilSquareIcon className="-mb-0.5 mr-1 h-4 w-4" />
               Edit list
             </button>
           )}
         </div>
+        <DialogWindow open={isOpen}>
+          <Dialog.Title as="div" className="mb-4 flex text-xl font-semibold">
+            <EllipsisHorizontalCircleIcon className="-mb-0.5 mr-1 h-5 w-5 self-center text-violet-600" />
+            <h3>Edit list</h3>
+          </Dialog.Title>
+          <ListForm
+            onSubmit={submit}
+            onCancel={() => setIsOpen(false)}
+            defaultValues={{ ...list }}
+          />
+        </DialogWindow>
         <p>{list.description}</p>
       </div>
     </Layout>
