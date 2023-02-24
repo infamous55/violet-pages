@@ -1,5 +1,5 @@
-import { getServerAuthSession } from "../server/common/get-server-auth-session";
-import { type GetServerSidePropsContext } from "next";
+import getServerAuthSession from "./getServerAuthSession";
+import type { GetServerSidePropsContext } from "next";
 import type User from "../types/user";
 
 const result = (redirectDestination: string | null, user: User | null) => {
