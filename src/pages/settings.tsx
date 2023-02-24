@@ -18,7 +18,7 @@ type Inputs = {
   image: string;
 };
 
-const Settings: NextPage<{ user: DeepNonNullable<User> }> = ({ user }) => {
+const Settings: NextPage<{ user: User }> = ({ user }) => {
   const {
     register,
     handleSubmit,

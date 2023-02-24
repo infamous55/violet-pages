@@ -1,13 +1,11 @@
-import { type NextPage, type GetServerSideProps } from "next";
+import type { NextPage, GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
-import { z } from "zod";
-import type DeepNonNullable from "../../types/deep-non-nullable";
 import type User from "../../types/user";
 import { prisma } from "../../server/db/client";
 import Head from "next/head";
 import isCUID from "../../utils/isCuid";
 
-type Props = DeepNonNullable<Required<Omit<User, "setupCompleted" | "email">>>;
+type Props = Omit<User, "setupCompleted" | "email">;
 
 const Profile: NextPage<Props> = (user) => {
   return (

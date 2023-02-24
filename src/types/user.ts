@@ -1,5 +1,10 @@
-import { User } from "next-auth";
+import type { DefaultSession } from "next-auth";
+import type DeepNonNullable from "./deep-non-nullable";
 
-type ExtendedUserType = User & { setupCompleted: boolean; description: string };
+type User = {
+  id: string;
+  setupCompleted: boolean;
+  description: string;
+} & DeepNonNullable<Required<DefaultSession["user"]>>;
 
-export default ExtendedUserType;
+export default User;
