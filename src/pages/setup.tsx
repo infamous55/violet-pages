@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { type NextPage, type GetServerSideProps } from "next";
 import useAuth from "../utils/useAuth";
-import type DeepNonNullable from "../types/deep-non-nullable";
 import type User from "../types/user";
 import { env } from "../env/client.mjs";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -74,6 +73,9 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
           body: selectedFile,
         });
         data.image = `${env.NEXT_PUBLIC_BUCKET_URL}/${key}`;
+        // const body = new FormData();
+        // body.append("file", selectedFile);
+        // await fetch("/api/upload-profile-picture", { method: "POST", body });
       } catch {
         setError("image", {
           message: "",

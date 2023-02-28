@@ -71,6 +71,12 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
           body: selectedFile,
         });
         data.image = `${env.NEXT_PUBLIC_BUCKET_URL}/${key}`;
+        // const body = new FormData();
+        // body.append("file", selectedFile);
+        // const response = await fetch("/api/upload-profile-picture", {
+        //   method: "POST",
+        //   body,
+        // });
       } catch {
         setError("image", {
           message: "",

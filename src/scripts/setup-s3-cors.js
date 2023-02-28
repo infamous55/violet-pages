@@ -21,7 +21,7 @@ require("dotenv").config();
           CORSRules: [
             {
               AllowedHeaders: ["Content-Type"],
-              AllowedMethods: ["PUT", "HEAD"],
+              AllowedMethods: ["PUT", "HEAD", "DELETE"],
               AllowedOrigins: ["*"],
               ExposeHeaders: ["Access-Control-Allow-Origin"],
               MaxAgeSeconds: 3600,
