@@ -1,6 +1,7 @@
-import { type NextPage, type GetServerSideProps } from "next";
+import type { NextPage, GetServerSideProps } from "next";
+import type { SearchData } from "../types/google-api-data";
 import Link from "next/link";
-import React, { useState, useEffect, useRef, LegacyRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Layout from "../components/Layout";
 import { env } from "../env/server.mjs";
 import { trpc } from "../utils/trpc";
@@ -18,30 +19,7 @@ function isNumber(x: any): x is number {
   return typeof x === "number";
 }
 
-type Data = {
-  totalItems: number;
-  items: [
-    {
-      id: string;
-      searchInfo?: {
-        textSnippet: string;
-      };
-      volumeInfo: {
-        title: string;
-        subtitle?: string;
-        authors?: [string];
-        // description: string;
-        // imageLinks?: {
-        //   thumbnail?: string;
-        // };
-        publishedDate: string;
-        // pageCount: number;
-      };
-    }
-  ];
-};
-
-const Search: NextPage<{ query: string; data: Data | null }> = ({
+const Search: NextPage<{ query: string; data: SearchData | null }> = ({
   query,
   data,
 }) => {
@@ -56,8 +34,8 @@ const Search: NextPage<{ query: string; data: Data | null }> = ({
     );
 
   const totalItems = data.totalItems;
-  const [results, setResults] = useState<Data | undefined>(data);
-  const [nextResults, setNextResults] = useState<Data | undefined>();
+  const [results, setResults] = useState<SearchData | undefined>(data);
+  const [nextResults, setNextResults] = useState<SearchData | undefined>();
   const [page, setPage] = useState<number>(1);
   let previousPage = usePrevious<number>(page);
 
