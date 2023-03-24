@@ -25,6 +25,7 @@ export const serverSchema = z.object({
   R2_ACCOUNT_ID: z.string(),
   R2_ACCESS_KEY_ID: z.string(),
   R2_SECRET_ACCESS_KEY: z.string(),
+  OPEN_API_KEY: z.string(),
 });
 
 /**
