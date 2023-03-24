@@ -5,9 +5,7 @@ import { prisma } from "../../server/db/client";
 import Head from "next/head";
 import isCUID from "../../utils/isCuid";
 
-type Props = Omit<User, "setupCompleted" | "email">;
-
-const Profile: NextPage<Props> = (user) => {
+const Profile: NextPage<Omit<User, "setupCompleted" | "email">> = (user) => {
   return (
     <Layout>
       <Head>

@@ -21,12 +21,10 @@ type ExtendedList = List & {
   books: Book[];
 };
 
-type Props = {
-  list: ExtendedList;
-  isAuthor: boolean;
-};
-
-const List: NextPage<Props> = ({ list, isAuthor }) => {
+const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
+  list,
+  isAuthor,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
