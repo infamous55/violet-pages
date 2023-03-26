@@ -1,4 +1,4 @@
-import { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Layout from "../../components/Layout";
 import isCUID from "../../utils/isCuid";
 import useAuth from "../../utils/useAuth";

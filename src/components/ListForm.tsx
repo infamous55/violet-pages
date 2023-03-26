@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { Switch } from "@headlessui/react";
 import CustomSwitch from "./CustomSwitch";
 import { zodResolver } from "@hookform/resolvers/zod";

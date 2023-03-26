@@ -1,7 +1,7 @@
-import { type GetServerSideProps, type NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Layout from "../../components/Layout";
 import { env } from "../../env/server.mjs";
-import { BookData } from "../../types/google-api-data";
+import type { BookData } from "../../types/google-api-data";
 import openai from "../../utils/openai";
 
 const Book: NextPage<{ book: BookData }> = ({ book }) => {
@@ -47,18 +47,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     );
     const book = await response.json();
 
-    // try {
-    //   if (book.volumeInfo.description) {
-    //     const response = await openai.createEdit({
-    //       model: "text-davinci-edit-001",
-    //       instruction:
-    //         "Edit the following text such that it follows standard grammar. Remove extra characters, remove markdown tags, use proper capitalization, and fix the punctuation. Make sure it follows a clean and correct writing style.",
-    //       input: book.volumeInfo.description,
-    //     });
+    //   try {
+    //     if (book.volumeInfo.description) {
+    //       const response = await openai.createEdit({
+    //         model: "text-davinci-edit-001",
+    //         instruction:
+    //           "Edit the following text such that it follows standard grammar. Remove extra characters, remove markdown tags, use proper capitalization, and fix the punctuation. Make sure it follows a clean and correct writing style.",
+    //         input: book.volumeInfo.description,
+    //       });
 
-    //     book.volumeInfo.description = response.data.choices[0]?.text;
+    //       book.volumeInfo.description = response.data.choices[0]?.text;
+    //     }
+    //   } catch (error) {
+    //     console.error(error);
     //   }
-    // } catch {}
 
     return {
       props: {

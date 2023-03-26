@@ -1,8 +1,8 @@
 import { Switch } from "@headlessui/react";
 import {
-  FieldValues,
+  type FieldValues,
+  type UseControllerProps,
   useController,
-  UseControllerProps,
 } from "react-hook-form";
 
 const CustomSwitch = <Inputs extends FieldValues>(
