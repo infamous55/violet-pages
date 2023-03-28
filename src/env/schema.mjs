@@ -26,6 +26,8 @@ export const serverSchema = z.object({
   R2_ACCESS_KEY_ID: z.string(),
   R2_SECRET_ACCESS_KEY: z.string(),
   OPEN_API_KEY: z.string(),
+  UPSTASH_REDIS_URL: z.string().url(),
+  UPSTASH_REDIS_TOKEN: z.string(),
 });
 
 /**

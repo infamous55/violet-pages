@@ -23,6 +23,7 @@
     "@trpc/next": "^10.16.0",
     "@trpc/react-query": "^10.16.0",
     "@trpc/server": "^10.16.0",
+    "@upstash/redis": "^1.20.1",
     "csstype": "3.0.10",
     "multer": "1.4.5-lts.1",
     "next": "13.0.2",
