@@ -6,7 +6,7 @@ import Link from "next/link";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 const NavBar: React.FC = () => {
@@ -34,6 +34,8 @@ const NavBar: React.FC = () => {
   const onSubmit: SubmitHandler<{ query: string }> = (data) => {
     if (data.query.trim()) router.push(`/search?query=${data.query}`);
   };
+
+  const [isHighlighted, setIsHighlighted] = useState(false);
 
   return (
     <nav className="flex h-14 w-full items-center justify-between">
@@ -65,8 +67,16 @@ const NavBar: React.FC = () => {
         </button>
       ) : (
         <Menu as="div" className="relative inline-block">
-          <Menu.Button>
-            <div className="flex items-center hover:text-gray-300">
+          <Menu.Button
+            className="focus:outline-none"
+            onFocus={() => setIsHighlighted(true)}
+            onBlur={() => setIsHighlighted(false)}
+          >
+            <div
+              className={`flex items-center hover:text-gray-300 ${
+                isHighlighted ? "text-gray-300" : null
+              }`}
+            >
               <ChevronDownIcon className="mx-1 h-5 w-5" />
               <Image
                 height={40}

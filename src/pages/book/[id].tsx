@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import { env } from "../../env/server.mjs";
 import type { BookData } from "../../types/google-api-data";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import toast from "../../utils/toast";
 
@@ -12,7 +12,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
   const [showDescription, setShowDescription] = useState(false);
   const [isFirst, setIsFirst] = useState(true);
 
-  const { refetch } = trpc.book.getDescription.useQuery(
+  const { isFetching, refetch } = trpc.book.getDescription.useQuery(
     { id: book.id, description: description as string },
     {
       enabled: false,
@@ -23,6 +23,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
   );
 
   const handleShowDescription = async () => {
+    if (isFetching) return;
     if (isFirst && description) {
       const toastId = toast.loading("Loading description!");
       try {
@@ -37,6 +38,20 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
     }
     setShowDescription(!showDescription);
   };
+
+  const descriptionRef = useRef<HTMLDivElement>(null);
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  useEffect(() => {
+    const element = descriptionRef.current as HTMLDivElement | null;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.code === "Space") {
+        event.preventDefault();
+        handleShowDescription();
+      }
+    };
+    element?.addEventListener("keydown", handler);
+    return () => element?.removeEventListener("keydown", handler);
+  });
 
   return (
     <Layout>
@@ -59,22 +74,35 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
                 }`
             )}
       </p>
-      <p className="mb-2 text-gray-300">
-        {book.volumeInfo.pageCount} pages · published{" "}
-        {new Date(book.volumeInfo.publishedDate).toLocaleDateString()}
-      </p>
+
       {book.volumeInfo.description && (
-        <div className="w-fit max-w-full rounded-sm border border-gray-600 bg-neutral-900 py-1 px-2">
+        <div
+          className="mb-2 w-fit max-w-full rounded-sm border border-gray-600 bg-neutral-900 py-1 px-2 focus:outline-none"
+          tabIndex={1}
+          onFocus={() => setIsHighlighted(true)}
+          onBlur={() => setIsHighlighted(false)}
+          ref={descriptionRef}
+        >
           <div
             className="flex w-fit cursor-pointer"
             onClick={handleShowDescription}
+            onMouseEnter={() => setIsHighlighted(true)}
+            onMouseLeave={() => setIsHighlighted(false)}
           >
-            <p>Show Description</p>
-            <ChevronDownIcon className="mx-1 mt-1 h-5 w-5" />
+            <p>{!showDescription ? "Show" : "Hide"} Description</p>
+            <ChevronDownIcon
+              className={`mx-1 mt-1 h-5 w-5 ${
+                isHighlighted ? "text-gray-300" : null
+              }`}
+            />
           </div>
-          {showDescription && <p className="mt-2">{description}</p>}
+          {showDescription && <p>{description}</p>}
         </div>
       )}
+      <p className="text-gray-300">
+        {book.volumeInfo.pageCount} pages · published{" "}
+        {new Date(book.volumeInfo.publishedDate).toLocaleDateString()}
+      </p>
     </Layout>
   );
 };
