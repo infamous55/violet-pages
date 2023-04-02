@@ -11,11 +11,13 @@ const Layout: React.FC<Props> = ({ children }) => {
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="w-full bg-neutral-900 text-white">
-        <div className="m-auto flex min-h-screen w-11/12 flex-col overflow-x-hidden pb-12 md:w-8/12">
-          <div className="z-10">
+      <div className="min-h-screen w-full bg-neutral-900 text-white">
+        <div className="mb-4 flex w-full items-center justify-center border-b border-gray-600">
+          <div className="z-10 w-11/12 md:w-8/12">
             <NavBar />
           </div>
+        </div>
+        <div className="m-auto flex w-11/12 flex-col overflow-x-hidden pb-12 md:w-8/12">
           {children}
         </div>
       </div>
