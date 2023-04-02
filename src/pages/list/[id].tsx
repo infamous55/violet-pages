@@ -5,12 +5,14 @@ import useAuth from "../../utils/useAuth";
 import { prisma } from "../../server/db/client";
 import type { List, Book } from "@prisma/client";
 import Head from "next/head";
-import { PencilSquareIcon } from "@heroicons/react/20/solid";
+import {
+  PencilSquareIcon,
+  EllipsisHorizontalCircleIcon,
+} from "@heroicons/react/20/solid";
 import type { SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import DialogWindow from "../../components/DialogWindow";
 import { Dialog } from "@headlessui/react";
-import { EllipsisHorizontalCircleIcon } from "@heroicons/react/20/solid";
 import ListForm from "../../components/ListForm";
 import type ListFormInputs from "../../types/list-form-inputs";
 import { trpc } from "../../utils/trpc";
@@ -54,11 +56,16 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
         <title>{list.name}</title>
       </Head>
       <div>
-        <div className="flex items-start justify-between">
-          <h3 className="mb-2 text-xl font-semibold">{list.name}</h3>
+        <div className="mb-2 flex flex-col-reverse flex-wrap items-start justify-between md:flex-row">
+          <div className="w-full md:w-3/5">
+            <h3 className="mb-2 max-w-full break-words text-xl font-semibold">
+              {list.name}
+            </h3>
+            <p>{list.description}</p>
+          </div>
           {isAuthor && (
             <button
-              className="relative inline-flex cursor-pointer items-center rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none"
+              className="mb-2 inline-flex cursor-pointer items-center self-end rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none md:self-auto"
               onClick={() => setIsOpen(true)}
             >
               <PencilSquareIcon className="-mb-0.5 mr-1 h-4 w-4" />
@@ -77,7 +84,6 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
             defaultValues={{ ...list }}
           />
         </DialogWindow>
-        <p>{list.description}</p>
       </div>
     </Layout>
   );

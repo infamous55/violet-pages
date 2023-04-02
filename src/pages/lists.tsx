@@ -84,7 +84,7 @@ const Lists: NextPage = () => {
       </Head>
       <Layout>
         <div>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col-reverse flex-wrap items-start justify-between md:flex-row">
             <div>
               <h3 className="mb-2 text-xl font-semibold">
                 <span className="select-none">📋 </span>Lists
@@ -94,7 +94,7 @@ const Lists: NextPage = () => {
               </p>
             </div>
             <button
-              className="relative inline-flex cursor-pointer items-center rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none"
+              className="relative mb-2 inline-flex cursor-pointer items-center self-end rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none md:self-auto"
               onClick={() => setIsOpen(true)}
             >
               <PlusIcon className="-mb-0.5 mr-1 h-4 w-4" />
@@ -147,10 +147,10 @@ const Lists: NextPage = () => {
             {lists.data?.map((list) => (
               <div
                 key={list.id}
-                className="flex w-full justify-between border-b border-gray-600 py-2 px-2 font-semibold"
+                className="flex w-full flex-wrap justify-between border-b border-gray-600 py-2 px-2 font-semibold"
               >
-                <Link href={`/list/${list.id}`}>
-                  <p>{list.name}</p>
+                <Link href={`/list/${list.id}`} className="max-w-full pr-1">
+                  <p className="break-words">{list.name}</p>
                 </Link>
                 <div>
                   <button
