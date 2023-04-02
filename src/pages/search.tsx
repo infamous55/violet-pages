@@ -71,6 +71,13 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
     fetchNextPageResults();
   }, [data]);
 
+  const goToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "auto",
+    });
+  };
+
   useEffect(() => {
     if (isNumber(previousPage)) {
       if (previousPage < page) {
@@ -145,7 +152,10 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
       <div className="mt-3 flex w-full justify-between">
         <button
           onClick={() => {
-            if (page > 1) setPage(page - 1);
+            if (page > 1) {
+              setPage(page - 1);
+              goToTop();
+            }
           }}
           disabled={page < 2}
           className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
@@ -156,6 +166,7 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
         <button
           onClick={() => {
             setPage(page + 1);
+            goToTop();
           }}
           disabled={isFetching || isError}
           className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
