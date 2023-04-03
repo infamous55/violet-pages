@@ -5,43 +5,38 @@ import type { BookData } from "../../types/google-api-data";
 import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useState, useRef, useEffect, Fragment } from "react";
 import { trpc } from "../../utils/trpc";
-import toast from "../../utils/toast";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import DialogWindow from "../../components/DialogWindow";
 import { Dialog, Listbox } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
-import { bookRouter } from "../../server/trpc/router/book";
 import useAuth from "../../utils/useAuth";
-import { prisma } from "../../server/db/client";
+import toast from "../../utils/toast";
+import type ListSelectItem from "../../types/list-select-item";
 
-type List = {
-  id: string;
-  name: string;
-  hasBook: boolean;
-};
-
-const Book: NextPage<{ book: BookData; lists: List[] }> = ({ book, lists }) => {
+const Book: NextPage<{ book: BookData }> = ({ book }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [description, setDescription] = useState(book.volumeInfo.description);
   const [showDescription, setShowDescription] = useState(false);
   const [isFirst, setIsFirst] = useState(true);
 
-  const { isFetching, refetch } = trpc.book.getDescription.useQuery(
-    { id: book.id, description: description as string },
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        setDescription(data);
-      },
-    }
-  );
+  const { isFetching: isFetchingDescription, refetch: fetchDescription } =
+    trpc.book.getDescription.useQuery(
+      { id: book.id, description: description as string },
+      {
+        enabled: false,
+        onSuccess: (data) => {
+          setDescription(data);
+        },
+      }
+    );
 
   const handleShowDescription = async () => {
-    if (isFetching) return;
+    if (isFetchingDescription) return;
     if (isFirst && description) {
       const toastId = toast.loading("Loading description!");
       try {
-        await refetch();
+        await fetchDescription();
         setIsFirst(false);
         toast.dismiss(toastId);
         toast.success("Fetched description!");
@@ -67,10 +62,46 @@ const Book: NextPage<{ book: BookData; lists: List[] }> = ({ book, lists }) => {
     return () => element?.removeEventListener("keydown", handler);
   });
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [lists, setLists] = useState<ListSelectItem[]>([]);
+  const [selectedLists, setSelectedLists] = useState<string[]>([]);
 
-  const getInitialState = () => lists.map((list) => list.hasBook && list.name);
-  const [selectedLists, setSelectedLists] = useState(() => getInitialState());
+  const updateListData = (data: ListSelectItem[]) => {
+    setLists(data);
+    setSelectedLists(
+      data
+        .map((list) => list.hasBook && list.id)
+        .filter((value) => typeof value === "string") as string[]
+    );
+  };
+
+  const { refetch: fetchLists } = trpc.book.getLists.useQuery(
+    { id: book.id },
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        updateListData(data);
+      },
+    }
+  );
+
+  useEffect(() => {
+    fetchLists();
+  }, []);
+
+  const { mutateAsync, isLoading } = trpc.book.addToLists.useMutation();
+  const handleSave = async () => {
+    try {
+      const data = await mutateAsync({
+        id: book.id,
+        selectedLists,
+      });
+      setIsOpen(false);
+      toast.success("Added book!");
+      updateListData(data);
+    } catch {
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <Layout>
@@ -138,15 +169,16 @@ const Book: NextPage<{ book: BookData; lists: List[] }> = ({ book, lists }) => {
       <DialogWindow open={isOpen}>
         <Dialog.Title as="div" className="mb-4 flex text-xl font-semibold">
           <PlusCircleIcon className="-mb-0.5 mr-1 h-5 w-5 self-center text-violet-600" />{" "}
-          Add book to list(s)
+          Add book
         </Dialog.Title>
         <div>
           <Listbox value={selectedLists} onChange={setSelectedLists} multiple>
             <Listbox.Options className="mb-4" static>
-              {lists.map((list) => (
+              {!lists.length && <p>You don't have any lists.</p>}
+              {lists?.map((list) => (
                 <Listbox.Option
                   key={list.id}
-                  value={list.name}
+                  value={list.id}
                   as="div"
                   className="not-last:mb-2"
                 >
@@ -155,12 +187,12 @@ const Book: NextPage<{ book: BookData; lists: List[] }> = ({ book, lists }) => {
                       {selected ? (
                         <FontAwesomeIcon
                           icon={faCheckSquare}
-                          className="mr-1 h-5 w-5 align-middle text-violet-600"
+                          className="mr-2 h-4 w-4 align-middle text-violet-600"
                         />
                       ) : (
                         <FontAwesomeIcon
                           icon={faSquare}
-                          className="mr-1 h-5 w-5 align-middle text-gray-300"
+                          className="mr-2 h-4 w-4 align-middle text-white"
                         />
                       )}
                       <span>{list.name}</span>
@@ -172,12 +204,19 @@ const Book: NextPage<{ book: BookData; lists: List[] }> = ({ book, lists }) => {
           </Listbox>
         </div>
         <div>
-          <button className=" mr-4 w-20 cursor-pointer rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none active:bg-violet-700">
+          <button
+            className=" mr-4 w-20 cursor-pointer rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
+            onClick={handleSave}
+            disabled={!lists.length || isLoading}
+          >
             Save
           </button>
           <button
-            className="mr-4 cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none"
-            onClick={() => setIsOpen(false)}
+            className="cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none"
+            onClick={() => {
+              setIsOpen(false);
+              fetchLists();
+            }}
           >
             Cancel
           </button>
@@ -188,7 +227,7 @@ const Book: NextPage<{ book: BookData; lists: List[] }> = ({ book, lists }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination, session } = await useAuth(context);
+  const { redirectDestination } = await useAuth(context);
   if (redirectDestination)
     return {
       redirect: {
@@ -212,14 +251,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     );
     const book = await response.json();
 
-    const caller = bookRouter.createCaller({ session, prisma });
-    const lists = await caller.getLists({ id });
-    console.log(lists);
-
     return {
       props: {
         book,
-        lists,
       },
     };
   } catch {
