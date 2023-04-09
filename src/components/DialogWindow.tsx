@@ -1,13 +1,22 @@
 import { Dialog } from "@headlessui/react";
+import type { RefObject } from "react";
 
 const DialogWindow = ({
   open,
   children,
+  initialFocus,
 }: {
   open: boolean;
   children?: JSX.Element | JSX.Element[];
+  initialFocus?: RefObject<any>;
 }) => (
-  <Dialog as="div" className="relative z-20" open={open} onClose={() => null}>
+  <Dialog
+    as="div"
+    className="relative z-20"
+    initialFocus={initialFocus}
+    open={open}
+    onClose={() => null}
+  >
     <div className="fixed inset-0 bg-black bg-opacity-50" />
     <div className="fixed inset-0 overflow-y-auto">
       <div className="flex min-h-full items-center justify-center">
