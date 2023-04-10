@@ -115,6 +115,8 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
     fetchLists();
   };
 
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
   return (
     <Layout>
       <div className="flex flex-col-reverse flex-wrap items-start justify-between md:flex-row">
@@ -178,7 +180,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
           Add book
         </button>
       </div>
-      <DialogWindow open={isOpen}>
+      <DialogWindow open={isOpen} initialFocus={cancelRef}>
         <Dialog.Title as="div" className="mb-4 flex text-xl font-semibold">
           <PlusCircleIcon className="-mb-0.5 mr-1 h-5 w-5 self-center text-violet-600" />{" "}
           Add book
@@ -205,6 +207,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
             className="cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none"
             onClick={cancel}
             tabIndex={lists.length + 2}
+            ref={cancelRef}
           >
             Cancel
           </button>
