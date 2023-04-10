@@ -75,8 +75,22 @@ model List {
 }
 
 model Book {
-  googleId String
-  lists    List[]
+  googleId      String
+  title         String
+  subtitle      String?
+  publishedDate DateTime
+  pageCount     Int
+
+  authors Author[]
+  lists   List[]
 
   @@id([googleId])
+}
+
+model Author {
+  name String
+
+  Books Book[]
+
+  @@id([name])
 }

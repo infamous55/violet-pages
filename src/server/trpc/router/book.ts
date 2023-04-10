@@ -5,6 +5,8 @@ import redis from "../../../utils/redis";
 import openai from "../../../utils/openai";
 import { prisma } from "../../db/client";
 import type ListSelectItem from "../../../types/list-select-item";
+import { env } from "../../../env/server.mjs";
+import { BookData } from "../../../types/google-api-data";
 
 export const bookRouter = router({
   getDescription: protectedProcedure
@@ -76,13 +78,17 @@ export const bookRouter = router({
             throw new TRPCError({ code: "FORBIDDEN" });
         });
 
+        const response = await fetch(
+          `https://www.googleapis.com/books/v1/volumes/${input.id}?key=${env.GOOGLE_API_KEY}`
+        );
+        const bookData: BookData = await response.json();
+
         const result: ListSelectItem[] = [];
-        const book = { googleId: input.id };
+
         const allLists = await prisma.list.findMany({
           select: { id: true, name: true },
           where: { authorId: ctx.session.user.id },
         });
-
         for (const list of allLists) {
           if (input.selectedLists.includes(list.id)) {
             await prisma.list.update({
@@ -90,8 +96,24 @@ export const bookRouter = router({
               data: {
                 books: {
                   connectOrCreate: {
-                    create: book,
-                    where: book,
+                    create: {
+                      googleId: input.id,
+                      title: bookData.volumeInfo.title,
+                      subtitle: bookData.volumeInfo.subtitle,
+                      publishedDate: new Date(
+                        bookData.volumeInfo.publishedDate
+                      ),
+                      pageCount: bookData.volumeInfo.pageCount,
+                      authors: {
+                        connectOrCreate: bookData.volumeInfo.authors?.map(
+                          (name) => ({
+                            create: { name },
+                            where: { name },
+                          })
+                        ),
+                      },
+                    },
+                    where: { googleId: input.id },
                   },
                 },
               },
@@ -102,7 +124,9 @@ export const bookRouter = router({
               where: { id: list.id },
               data: {
                 books: {
-                  disconnect: book,
+                  disconnect: {
+                    googleId: input.id,
+                  },
                 },
               },
             });

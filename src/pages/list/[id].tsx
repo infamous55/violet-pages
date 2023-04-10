@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import isCUID from "../../utils/isCuid";
 import useAuth from "../../utils/useAuth";
 import { prisma } from "../../server/db/client";
-import type { List, Book } from "@prisma/client";
+import type { List, Book, Author } from "@prisma/client";
 import Head from "next/head";
 import {
   PencilSquareIcon,
@@ -18,9 +18,15 @@ import type ListFormInputs from "../../types/list-form-inputs";
 import { trpc } from "../../utils/trpc";
 import toast from "../../utils/toast";
 import { useRouter } from "next/router";
+// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import Link from "next/link";
+
+type ExtendedBook = Book & {
+  authors: Author[];
+};
 
 type ExtendedList = List & {
-  books: Book[];
+  books: ExtendedBook[];
 };
 
 const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
@@ -50,6 +56,9 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
     }
   };
 
+  const [books, setBooks] = useState(list.books);
+  console.log(books);
+
   return (
     <Layout>
       <Head>
@@ -61,6 +70,9 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
             <h3 className="mb-2 max-w-full break-words text-xl font-semibold">
               {list.name}
             </h3>
+            <p className="mb-2 inline-block text-sm font-semibold text-gray-300">
+              {books.length} books in total
+            </p>
             <p>{list.description}</p>
           </div>
           {isAuthor && (
@@ -84,6 +96,36 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
             defaultValues={{ ...list }}
           />
         </DialogWindow>
+        <div className="mt-4"></div>
+        <div>
+          {books.map((book, index) => (
+            <div
+              key={book.googleId}
+              className="flex w-full flex-wrap justify-between border-b border-gray-600 py-2 px-2 font-semibold"
+            >
+              <Link href={`/book/${book.googleId}`} className="w-fit">
+                <h3 className="break-words">{book.title}</h3>
+                <h5 className="text-sm text-gray-300">{book.subtitle}</h5>
+                <p className="text-sm italic">
+                  <span className="not-italic text-gray-300">by</span>{" "}
+                  {!book.authors?.length
+                    ? "Unknown"
+                    : book.authors.map(
+                        (author, index) =>
+                          `${author.name}${
+                            index !== (book.authors?.length as number) - 1
+                              ? ", "
+                              : ""
+                          }`
+                      )}
+                </p>
+                <p className="text-sm text-gray-300">
+                  {book.publishedDate.getFullYear().toString()} edition
+                </p>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </Layout>
   );
@@ -101,7 +143,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const list = await prisma.list.findUnique({
     where: { id },
-    include: { books: true },
+    include: { books: { include: { authors: true } } },
   });
   if (!list)
     return {
