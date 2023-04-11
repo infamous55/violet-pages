@@ -141,4 +141,45 @@ export const bookRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
+  removeFromList: protectedProcedure
+    .input(z.object({ bookId: z.string(), listId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const book = await prisma.book.findUnique({
+          where: { googleId: input.bookId },
+        });
+        if (!book) throw new TRPCError({ code: "BAD_REQUEST" });
+
+        const list = await prisma.list.findUnique({
+          where: { id: input.listId },
+        });
+        if (!list) throw new TRPCError({ code: "BAD_REQUEST" });
+        if (list.authorId !== ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+
+        const updatedList = await prisma.list.update({
+          where: { id: input.listId },
+          data: {
+            books: {
+              disconnect: {
+                googleId: input.bookId,
+              },
+            },
+          },
+          include: {
+            books: {
+              include: {
+                authors: true,
+              },
+            },
+          },
+        });
+
+        return updatedList;
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
 });

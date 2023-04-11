@@ -20,6 +20,7 @@ import toast from "../../utils/toast";
 import { useRouter } from "next/router";
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Link from "next/link";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 type ExtendedBook = Book & {
   authors: Author[];
@@ -51,13 +52,24 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
       setIsOpen(false);
       toast.success("List updated!");
       router.replace(router.asPath);
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong!");
     }
   };
 
   const [books, setBooks] = useState(list.books);
-  console.log(books);
+
+  const { mutateAsync } = trpc.book.removeFromList.useMutation();
+  const handleDelete = async (bookId: string) => {
+    try {
+      const updatedList = await mutateAsync({ bookId, listId: list.id });
+      console.log(updatedList);
+      setBooks(updatedList.books);
+      toast.success("Removed book!");
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <Layout>
@@ -101,9 +113,14 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
           {books.map((book, index) => (
             <div
               key={book.googleId}
-              className="flex w-full flex-wrap justify-between border-b border-gray-600 py-2 px-2 font-semibold"
+              className="flex w-full flex-wrap justify-between border-b border-gray-600 font-semibold"
             >
-              <Link href={`/book/${book.googleId}`} className="w-fit">
+              <Link
+                href={`/book/${book.googleId}`}
+                className={`py-2 pl-2 ${
+                  isAuthor ? "w-fit" : "w-full hover:bg-neutral-800"
+                }`}
+              >
                 <h3 className="break-words">{book.title}</h3>
                 <h5 className="text-sm text-gray-300">{book.subtitle}</h5>
                 <p className="text-sm italic">
@@ -123,6 +140,14 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
                   {book.publishedDate.getFullYear().toString()} edition
                 </p>
               </Link>
+              {isAuthor && (
+                <button
+                  className="mr-2 text-red-500"
+                  onClick={() => handleDelete(book.googleId)}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </button>
+              )}
             </div>
           ))}
         </div>
