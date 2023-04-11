@@ -1,16 +1,15 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Head from "next/head";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Layout from "../components/Layout";
-import DeepNonNullable from "../types/deep-non-nullable";
-import type User from "../types/user";
-import useAuth from "../utils/useAuth";
+import Layout from "~/components/Layout";
+import type User from "~/types/user";
+import useAuth from "~/utils/useAuth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { trpc } from "../utils/trpc";
-import { env } from "../env/client.mjs";
-import toast from "../utils/toast";
+import { trpc } from "~/utils/trpc";
+import { env } from "~/env/client.mjs";
+import toast from "~/utils/toast";
 
 type Inputs = {
   name: string;

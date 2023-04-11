@@ -1,17 +1,17 @@
 import type { GetServerSideProps, NextPage } from "next";
-import Layout from "../../components/Layout";
-import { env } from "../../env/server.mjs";
-import type { BookData } from "../../types/google-api-data";
+import Layout from "~/components/Layout";
+import { env } from "~/env/server.mjs";
+import type { BookData } from "~/types/google-api-data";
 import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useState, useRef, useEffect } from "react";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "~/utils/trpc";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import DialogWindow from "../../components/DialogWindow";
+import DialogWindow from "~/components/DialogWindow";
 import { Dialog } from "@headlessui/react";
-import useAuth from "../../utils/useAuth";
-import toast from "../../utils/toast";
-import type ListSelectItem from "../../types/list-select-item";
-import MultiSelect from "../../components/MultiSelect";
+import useAuth from "~/utils/useAuth";
+import toast from "~/utils/toast";
+import type ListSelectItem from "~/types/list-select-item";
+import MultiSelect from "~/components/MultiSelect";
 
 const Book: NextPage<{ book: BookData }> = ({ book }) => {
   useEffect(() => {

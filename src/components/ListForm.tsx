@@ -3,7 +3,7 @@ import { Switch } from "@headlessui/react";
 import CustomSwitch from "./CustomSwitch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import type ListFormInputs from "../types/list-form-inputs";
+import type ListFormInputs from "~/types/list-form-inputs";
 
 const ListForm = ({
   defaultValues,

@@ -1,6 +1,6 @@
 import getServerAuthSession from "./getServerAuthSession";
 import type { GetServerSidePropsContext } from "next";
-import type User from "../types/user";
+import type User from "~/types/user";
 import type { Session } from "next-auth";
 
 const result = (

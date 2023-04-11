@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse, PageConfig } from "next";
-import getServerAuthSession from "../../utils/getServerAuthSession";
+import getServerAuthSession from "~/utils/getServerAuthSession";
 import multer, { MulterError } from "multer";
 import { createRouter } from "next-connect";
 import { v4 } from "uuid";
@@ -8,8 +8,8 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { env } from "../../env/server.mjs";
-import { prisma } from "../../server/db/client";
+import { env } from "~/env/server.mjs";
+import { prisma } from "~/server/db/client";
 
 interface NextConnectApiRequest extends NextApiRequest {
   file?: Express.Multer.File;

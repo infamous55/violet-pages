@@ -1,12 +1,12 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { prisma } from "../../db/client";
-import { env } from "../../../env/server.mjs";
+import { prisma } from "~/server/db/client";
+import { env } from "~/env/server.mjs";
 import { v4 } from "uuid";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { TRPCError } from "@trpc/server";
-import type User from "../../../types/user";
+import type User from "~/types/user";
 
 const userSchema = z.object({
   name: z.string().min(1).max(13),

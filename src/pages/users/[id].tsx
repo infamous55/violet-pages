@@ -1,9 +1,9 @@
 import type { NextPage, GetServerSideProps } from "next";
-import Layout from "../../components/Layout";
-import type User from "../../types/user";
-import { prisma } from "../../server/db/client";
+import Layout from "~/components/Layout";
+import type User from "~/types/user";
+import { prisma } from "~/server/db/client";
 import Head from "next/head";
-import isCUID from "../../utils/isCuid";
+import isCUID from "~/utils/isCuid";
 
 const Profile: NextPage<Omit<User, "setupCompleted" | "email">> = (user) => {
   return (

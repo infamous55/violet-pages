@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { env } from "../../../env/server.mjs";
+import { env } from "~/env/server.mjs";
 import { TRPCError } from "@trpc/server";
 
 export const searchRouter = router({

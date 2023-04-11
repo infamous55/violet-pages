@@ -1,12 +1,12 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import redis from "../../../utils/redis";
-import openai from "../../../utils/openai";
-import { prisma } from "../../db/client";
-import type ListSelectItem from "../../../types/list-select-item";
-import { env } from "../../../env/server.mjs";
-import { BookData } from "../../../types/google-api-data";
+import redis from "~/utils/redis";
+import openai from "~/utils/openai";
+import { prisma } from "~/server/db/client";
+import type ListSelectItem from "~/types/list-select-item";
+import { env } from "~/env/server.mjs";
+import type { BookData } from "~/types/google-api-data";
 
 export const bookRouter = router({
   getDescription: protectedProcedure

@@ -1,8 +1,8 @@
 import type { GetServerSideProps, NextPage } from "next";
-import Layout from "../../components/Layout";
-import isCUID from "../../utils/isCuid";
-import useAuth from "../../utils/useAuth";
-import { prisma } from "../../server/db/client";
+import Layout from "~/components/Layout";
+import isCUID from "~/utils/isCuid";
+import useAuth from "~/utils/useAuth";
+import { prisma } from "~/server/db/client";
 import type { List, Book, Author, User } from "@prisma/client";
 import Head from "next/head";
 import {
@@ -11,12 +11,12 @@ import {
 } from "@heroicons/react/20/solid";
 import type { SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
-import DialogWindow from "../../components/DialogWindow";
+import DialogWindow from "~/components/DialogWindow";
 import { Dialog } from "@headlessui/react";
-import ListForm from "../../components/ListForm";
-import type ListFormInputs from "../../types/list-form-inputs";
-import { trpc } from "../../utils/trpc";
-import toast from "../../utils/toast";
+import ListForm from "~/components/ListForm";
+import type ListFormInputs from "~/types/list-form-inputs";
+import { trpc } from "~/utils/trpc";
+import toast from "~/utils/toast";
 import { useRouter } from "next/router";
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Link from "next/link";
@@ -25,7 +25,6 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 type ExtendedBook = Book & {
   authors: Author[];
 };
-
 type ExtendedList = List & {
   author: User;
   books: ExtendedBook[];

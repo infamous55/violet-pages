@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Layout from "../../components/Layout";
-import useAuth from "../../utils/useAuth";
+import Layout from "~/components/Layout";
+import useAuth from "~/utils/useAuth";
 import {
   PlusIcon,
   ClipboardIcon,
@@ -10,16 +10,16 @@ import {
 import { Dialog } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
-import { trpc } from "../../utils/trpc";
-import toast from "../../utils/toast";
+import { trpc } from "~/utils/trpc";
+import toast from "~/utils/toast";
 import { TRPCClientError } from "@trpc/client";
-import type { AppRouter } from "../../server/trpc/router/_app";
+import type { AppRouter } from "~/server/trpc/router/_app";
 import Link from "next/link";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/20/solid";
-import { env } from "../../env/client.mjs";
-import DialogWindow from "../../components/DialogWindow";
-import ListForm from "../../components/ListForm";
-import type ListFormInputs from "../../types/list-form-inputs";
+import { env } from "~/env/client.mjs";
+import DialogWindow from "~/components/DialogWindow";
+import ListForm from "~/components/ListForm";
+import type ListFormInputs from "~/types/list-form-inputs";
 
 const Lists: NextPage = () => {
   const utils = trpc.useContext();

@@ -1,11 +1,11 @@
 import type { NextPage, GetServerSideProps } from "next";
-import type { SearchData } from "../types/google-api-data";
+import type { SearchData } from "~/types/google-api-data";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-import Layout from "../components/Layout";
-import { env } from "../env/server.mjs";
-import { trpc } from "../utils/trpc";
-import useAuth from "../utils/useAuth";
+import Layout from "~/components/Layout";
+import { env } from "~/env/server.mjs";
+import { trpc } from "~/utils/trpc";
+import useAuth from "~/utils/useAuth";
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>();

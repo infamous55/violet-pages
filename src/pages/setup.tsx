@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { type NextPage, type GetServerSideProps } from "next";
-import useAuth from "../utils/useAuth";
-import type User from "../types/user";
-import { env } from "../env/client.mjs";
+import useAuth from "~/utils/useAuth";
+import type User from "~/types/user";
+import { env } from "~/env/client.mjs";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { trpc } from "../utils/trpc";
-import toast from "../utils/toast";
+import { trpc } from "~/utils/trpc";
+import toast from "~/utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";

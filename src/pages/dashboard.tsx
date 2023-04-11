@@ -1,7 +1,7 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Head from "next/head";
-import Layout from "../components/Layout";
-import useAuth from "../utils/useAuth";
+import Layout from "~/components/Layout";
+import useAuth from "~/utils/useAuth";
 
 const Dashboard: NextPage = () => {
   return (
