@@ -84,7 +84,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
   const { refetch: fetchLists } = trpc.book.getLists.useQuery(
     { id: book.id },
     {
-      enabled: false,
+      // enabled: false,
       onSuccess: (data) => {
         updateListData(data);
       },

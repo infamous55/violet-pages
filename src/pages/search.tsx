@@ -103,7 +103,7 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
       {results?.items.map((item, index) => (
         <React.Fragment key={item.id}>
           <Link
-            href={`/book/${item.id}`}
+            href={`/books/${item.id}`}
             className="focus:outline-none"
             onFocus={() => setFocus(item.id)}
             onBlur={() => setFocus("")}

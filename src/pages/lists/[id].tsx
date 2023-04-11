@@ -94,7 +94,7 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
             {!isAuthor && (
               <p className="text-sm font-semibold italic">
                 <span className="not-italic text-gray-300">by</span>{" "}
-                <Link href={`/user/${list.authorId}`}>{list.author.name}</Link>
+                <Link href={`/users/${list.authorId}`}>{list.author.name}</Link>
               </p>
             )}
             <p className="mb-2 inline-block text-sm font-semibold text-gray-300">
@@ -131,7 +131,7 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
               className="flex w-full flex-wrap justify-between border-b border-gray-600 font-semibold"
             >
               <Link
-                href={`/book/${book.googleId}`}
+                href={`/books/${book.googleId}`}
                 className={`py-2 pl-2 ${
                   isAuthor ? "w-fit" : "w-full hover:bg-neutral-800"
                 }`}

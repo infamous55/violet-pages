@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Layout from "../components/Layout";
-import useAuth from "../utils/useAuth";
+import Layout from "../../components/Layout";
+import useAuth from "../../utils/useAuth";
 import {
   PlusIcon,
   ClipboardIcon,
@@ -10,16 +10,16 @@ import {
 import { Dialog } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
-import { trpc } from "../utils/trpc";
-import toast from "../utils/toast";
+import { trpc } from "../../utils/trpc";
+import toast from "../../utils/toast";
 import { TRPCClientError } from "@trpc/client";
-import type { AppRouter } from "../server/trpc/router/_app";
+import type { AppRouter } from "../../server/trpc/router/_app";
 import Link from "next/link";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/20/solid";
-import { env } from "../env/client.mjs";
-import DialogWindow from "../components/DialogWindow";
-import ListForm from "../components/ListForm";
-import type ListFormInputs from "../types/list-form-inputs";
+import { env } from "../../env/client.mjs";
+import DialogWindow from "../../components/DialogWindow";
+import ListForm from "../../components/ListForm";
+import type ListFormInputs from "../../types/list-form-inputs";
 
 const Lists: NextPage = () => {
   const utils = trpc.useContext();
@@ -60,7 +60,7 @@ const Lists: NextPage = () => {
 
   const handleCopy = (id: string) => {
     navigator.clipboard
-      .writeText(`${env.NEXT_PUBLIC_APP_URL}/list/${id}`)
+      .writeText(`${env.NEXT_PUBLIC_APP_URL}/lists/${id}`)
       .then(() => toast.success("Copied link to clipboard!"))
       .catch(() => toast.error("Something went wrong!"));
   };
@@ -149,7 +149,7 @@ const Lists: NextPage = () => {
                 key={list.id}
                 className="flex w-full flex-wrap justify-between border-b border-gray-600 py-2 px-2 font-semibold"
               >
-                <Link href={`/list/${list.id}`} className="max-w-full pr-1">
+                <Link href={`/lists/${list.id}`} className="max-w-full pr-1">
                   <p className="break-words">{list.name}</p>
                 </Link>
                 <div>
