@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import isCUID from "../../utils/isCuid";
 import useAuth from "../../utils/useAuth";
 import { prisma } from "../../server/db/client";
-import type { List, Book, Author } from "@prisma/client";
+import type { List, Book, Author, User } from "@prisma/client";
 import Head from "next/head";
 import {
   PencilSquareIcon,
@@ -27,6 +27,7 @@ type ExtendedBook = Book & {
 };
 
 type ExtendedList = List & {
+  author: User;
   books: ExtendedBook[];
 };
 
@@ -82,6 +83,12 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
             <h3 className="mb-2 max-w-full break-words text-xl font-semibold">
               {list.name}
             </h3>
+            {!isAuthor && (
+              <p className="text-sm font-semibold italic">
+                <span className="not-italic text-gray-300">by</span>{" "}
+                <Link href={`/user/${list.authorId}`}>{list.author.name}</Link>
+              </p>
+            )}
             <p className="mb-2 inline-block text-sm font-semibold text-gray-300">
               {books.length} books in total
             </p>
@@ -168,7 +175,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const list = await prisma.list.findUnique({
     where: { id },
-    include: { books: { include: { authors: true } } },
+    include: { books: { include: { authors: true } }, author: true },
   });
   if (!list)
     return {
