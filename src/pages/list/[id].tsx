@@ -59,6 +59,14 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
   };
 
   const [books, setBooks] = useState(list.books);
+  trpc.list.getBooks.useQuery(
+    { id: list.id },
+    {
+      onSuccess(books) {
+        setBooks(books);
+      },
+    }
+  );
 
   const { mutateAsync } = trpc.book.removeFromList.useMutation();
   const handleDelete = async (bookId: string) => {

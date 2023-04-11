@@ -81,4 +81,21 @@ export const listRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
+  getBooks: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const list = await prisma.list.findUnique({
+          where: { id: input.id },
+          include: { books: { include: { authors: true } } },
+        });
+        if (!list) throw new TRPCError({ code: "BAD_REQUEST" });
+
+        return list.books;
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
 });
