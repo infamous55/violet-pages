@@ -6,19 +6,31 @@ import Head from "next/head";
 import isCUID from "~/utils/isCuid";
 import Image from "next/image";
 import type { List } from "@prisma/client";
-import useAuth from "~/utils/useAuth";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { trpc } from "~/utils/trpc";
 
 type ProfileData = {
   user: Omit<User, "setupCompleted" | "email">;
   lists: List[];
 };
 
-const Profile: NextPage<ProfileData> = ({ user, lists }) => {
+const Profile: NextPage<ProfileData> = (profile) => {
+  const [data, setData] = useState(profile);
+
+  trpc.user.getProfile.useQuery(
+    { id: profile.user.id },
+    {
+      onSuccess(data) {
+        setData(data);
+      },
+    }
+  );
+
   return (
     <Layout>
       <Head>
-        <title>{user.name}</title>
+        <title>{data.user.name}</title>
       </Head>
       <div className="mb-4 w-full md:w-3/5">
         <div className="mb-2 flex items-center">
@@ -26,18 +38,20 @@ const Profile: NextPage<ProfileData> = ({ user, lists }) => {
             height={40}
             width={40}
             className="mr-4 flex-shrink-0 flex-grow-0 rounded-full"
-            src={user.image}
+            src={data.user.image}
             alt="profile-picture"
           />
-          <h3 className="break-words text-xl font-semibold">{user.name}</h3>
+          <h3 className="break-words text-xl font-semibold">
+            {data.user.name}
+          </h3>
         </div>
-        {user.description && (
+        {data.user.description && (
           <p className="rounded-sm border border-gray-600 py-1 px-2">
-            {user.description}
+            {data.user.description}
           </p>
         )}
       </div>
-      {lists.length ? (
+      {data.lists.length ? (
         <h3 className="mb-2 text-xl font-semibold">
           <span className="select-none">📋 </span>Public Lists
         </h3>
@@ -47,7 +61,7 @@ const Profile: NextPage<ProfileData> = ({ user, lists }) => {
         </h3>
       )}
       <div className="w-full">
-        {lists?.map((list) => (
+        {data.lists?.map((list) => (
           <Link
             key={list.id}
             href={`/lists/${list.id}`}
@@ -89,7 +103,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      user,
+      user: { id, ...user },
       lists,
     },
   };

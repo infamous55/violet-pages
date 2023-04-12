@@ -64,4 +64,26 @@ export const userRouter = router({
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }
   }),
+  getProfile: publicProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .query(async ({ input }) => {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: input.id },
+          select: { description: true, name: true, image: true },
+        });
+        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+        const lists = await prisma.list.findMany({
+          where: { authorId: input.id, public: true },
+        });
+        return {
+          user: { id: input.id, ...user },
+          lists,
+        };
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
 });
