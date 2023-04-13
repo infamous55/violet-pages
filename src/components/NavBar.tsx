@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 const NavBar: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -56,13 +58,17 @@ const NavBar: React.FC = () => {
       )}
       {!sessionData ? (
         <button
-          className="inline-block rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base"
+          className="flex rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base"
           onClick={() =>
             signIn("google", {
               callbackUrl: `${window.location.origin}/dashboard`,
             })
           }
         >
+          <FontAwesomeIcon
+            icon={faGoogle}
+            className="mr-2 h-4 w-4 self-center text-violet-600"
+          />
           Sign in
         </button>
       ) : (
