@@ -86,4 +86,20 @@ export const userRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const user = await prisma.user.findUnique({ where: { id: input.id } });
+        if (!user) throw new TRPCError({ code: "BAD_REQUEST" });
+        if (user.id !== ctx.session.user.id)
+          throw new TRPCError({ code: "FORBIDDEN" });
+        await prisma.user.delete({ where: { id: input.id } });
+        return;
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
 });

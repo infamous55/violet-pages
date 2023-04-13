@@ -6,10 +6,15 @@ import type User from "~/types/user";
 import useAuth from "~/utils/useAuth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "~/utils/trpc";
 import { env } from "~/env/client.mjs";
 import toast from "~/utils/toast";
+import DialogWindow from "~/components/DialogWindow";
+import { Dialog } from "@headlessui/react";
+import { MinusCircleIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
 type Inputs = {
   name: string;
@@ -97,6 +102,31 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
     return false;
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const cancel = () => setIsOpen(false);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) cancel();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  });
+
+  const router = useRouter();
+  const { mutateAsync: deleteUser, isLoading } = trpc.user.delete.useMutation();
+  const handleDelete = async () => {
+    try {
+      signOut();
+      await deleteUser({ id: user.id });
+      cancel();
+      toast.success("Account deleted");
+      router.push("/");
+    } catch {
+      toast.error("Something went wrong!");
+    }
+  };
+
   return (
     <>
       <Head>
@@ -106,7 +136,7 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
         <h3 className="mb-2 text-xl font-semibold">
           <span className="select-none">⚙️ </span>Settings
         </h3>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="mb-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="max-w-md">
             <div className="mb-4">
               <label className="mb-2 block font-medium" htmlFor="name">
@@ -178,6 +208,49 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
             value="Save account settings"
           />
         </form>
+        <div className="mb-2 max-w-md border-t border-gray-600"></div>
+        <div className="max-w-md">
+          <h3 className="mb-2 text-xl font-semibold">
+            <span className="select-none">❌ </span>Delete account
+          </h3>
+          <p className="mb-3">
+            Delete this account and all the associated data.
+          </p>
+          <button
+            className="cursor-pointer rounded-md bg-red-700 py-1 px-4 hover:bg-red-800 focus:bg-red-800 focus:outline-none"
+            onClick={() => setIsOpen(true)}
+          >
+            Delete account
+          </button>
+        </div>
+        <DialogWindow open={isOpen}>
+          <Dialog.Title as="div" className="mb-4 flex text-xl font-semibold">
+            <MinusCircleIcon className="-mb-0.5 mr-1 h-5 w-5 self-center text-red-700" />
+            <h3>Delete account</h3>
+          </Dialog.Title>
+          <Dialog.Description>
+            <p className="mb-4">
+              Are you sure you want to delete your account? This action cannot
+              be undone.
+            </p>
+          </Dialog.Description>
+          <div>
+            <button
+              className="mr-4 cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
+              onClick={cancel}
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              className="cursor-pointer rounded-md bg-red-700 py-1 px-4 hover:bg-red-800 focus:bg-red-800 focus:outline-none disabled:cursor-not-allowed disabled:bg-red-900 disabled:text-gray-300"
+              onClick={handleDelete}
+              disabled={isLoading}
+            >
+              Delete
+            </button>
+          </div>
+        </DialogWindow>
       </Layout>
     </>
   );
