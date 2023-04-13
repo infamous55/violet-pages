@@ -6,6 +6,8 @@ import Layout from "~/components/Layout";
 import { env } from "~/env/server.mjs";
 import { trpc } from "~/utils/trpc";
 import useAuth from "~/utils/useAuth";
+import { searchRouter } from "~/server/trpc/router/search";
+import { prisma } from "~/server/db/client";
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>();
@@ -180,7 +182,7 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination } = await useAuth(context);
+  const { redirectDestination, session } = await useAuth(context);
   if (redirectDestination)
     return {
       redirect: {
@@ -197,6 +199,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         permanent: false,
       },
     };
+
+  const caller = searchRouter.createCaller({ prisma, session });
+  await caller.addToHistory({ query });
 
   try {
     const response = await fetch(

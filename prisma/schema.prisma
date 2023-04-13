@@ -48,6 +48,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   lists          List[]
+  searches       Search[]
 }
 
 model VerificationToken {
@@ -93,4 +94,16 @@ model Author {
   Books Book[]
 
   @@id([name])
+}
+
+model Search {
+  query  String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, query])
+  @@index([userId])
 }
