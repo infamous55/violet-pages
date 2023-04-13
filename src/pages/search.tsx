@@ -8,6 +8,7 @@ import { trpc } from "~/utils/trpc";
 import useAuth from "~/utils/useAuth";
 import { searchRouter } from "~/server/trpc/router/search";
 import { prisma } from "~/server/db/client";
+import Head from "next/head";
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>();
@@ -95,89 +96,94 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
   const [focus, setFocus] = useState<string>();
   const ref = useRef<HTMLButtonElement>(null);
   return (
-    <Layout>
-      <h3 className="mb-2 text-xl font-semibold text-gray-300">
-        🔎 Searched for: <span className="text-white">{query}</span>
-      </h3>
-      <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
-        {totalItems} entries found
-      </p>
-      {results?.items.map((item, index) => (
-        <React.Fragment key={item.id}>
-          <Link
-            href={`/books/${item.id}`}
-            className="focus:outline-none"
-            onFocus={() => setFocus(item.id)}
-            onBlur={() => setFocus("")}
-          >
-            <div
-              className={`w-full rounded-md bg-neutral-900 py-2 px-2 font-semibold hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
-                focus === item.id ? "bg-neutral-800" : null
-              }`}
-              tabIndex={index + 1}
+    <>
+      <Head>
+        <title>Searched for {query}</title>
+      </Head>
+      <Layout>
+        <h3 className="mb-2 text-xl font-semibold text-gray-300">
+          🔎 Searched for: <span className="text-white">{query}</span>
+        </h3>
+        <p className="mb-2 ml-2 inline-block text-sm font-semibold text-gray-300">
+          {totalItems} entries found
+        </p>
+        {results?.items.map((item, index) => (
+          <React.Fragment key={item.id}>
+            <Link
+              href={`/books/${item.id}`}
+              className="focus:outline-none"
+              onFocus={() => setFocus(item.id)}
+              onBlur={() => setFocus("")}
             >
-              <h3>{item.volumeInfo.title}</h3>
-              <h5 className="text-sm text-gray-300">
-                {item.volumeInfo.subtitle}
-              </h5>
-              <p className="text-sm italic">
-                <span className="not-italic text-gray-300">by</span>{" "}
-                {!item.volumeInfo.authors
-                  ? "Unknown"
-                  : item.volumeInfo.authors.map(
-                      (author, index) =>
-                        `${author}${
-                          index !==
-                          (item.volumeInfo.authors?.length as number) - 1
-                            ? ", "
-                            : ""
-                        }`
-                    )}
-              </p>
-              {!isNaN(new Date(item.volumeInfo.publishedDate).getTime()) ? (
-                <p className="text-sm text-gray-300">
-                  {new Date(item.volumeInfo.publishedDate)
-                    .getFullYear()
-                    .toString()}{" "}
-                  edition
+              <div
+                className={`w-full rounded-md bg-neutral-900 py-2 px-2 font-semibold hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
+                  focus === item.id ? "bg-neutral-800" : null
+                }`}
+                tabIndex={index + 1}
+              >
+                <h3>{item.volumeInfo.title}</h3>
+                <h5 className="text-sm text-gray-300">
+                  {item.volumeInfo.subtitle}
+                </h5>
+                <p className="text-sm italic">
+                  <span className="not-italic text-gray-300">by</span>{" "}
+                  {!item.volumeInfo.authors
+                    ? "Unknown"
+                    : item.volumeInfo.authors.map(
+                        (author, index) =>
+                          `${author}${
+                            index !==
+                            (item.volumeInfo.authors?.length as number) - 1
+                              ? ", "
+                              : ""
+                          }`
+                      )}
                 </p>
-              ) : null}
-            </div>
-          </Link>
-          <div
-            className="border-t border-gray-600"
-            onMouseOver={() => setFocus(item.id)}
-            onMouseLeave={() => setFocus("")}
-          ></div>
-        </React.Fragment>
-      ))}
-      <div className="mt-3 flex w-full justify-between">
-        <button
-          onClick={() => {
-            if (page > 1) {
-              setPage(page - 1);
+                {!isNaN(new Date(item.volumeInfo.publishedDate).getTime()) ? (
+                  <p className="text-sm text-gray-300">
+                    {new Date(item.volumeInfo.publishedDate)
+                      .getFullYear()
+                      .toString()}{" "}
+                    edition
+                  </p>
+                ) : null}
+              </div>
+            </Link>
+            <div
+              className="border-t border-gray-600"
+              onMouseOver={() => setFocus(item.id)}
+              onMouseLeave={() => setFocus("")}
+            ></div>
+          </React.Fragment>
+        ))}
+        <div className="mt-3 flex w-full justify-between">
+          <button
+            onClick={() => {
+              if (page > 1) {
+                setPage(page - 1);
+                goToTop();
+              }
+            }}
+            disabled={page < 2}
+            className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
+            ref={ref}
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => {
+              setPage(page + 1);
               goToTop();
-            }
-          }}
-          disabled={page < 2}
-          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
-          ref={ref}
-        >
-          Previous
-        </button>
-        <button
-          onClick={() => {
-            setPage(page + 1);
-            goToTop();
-          }}
-          disabled={isFetching || isError}
-          className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
-          style={{ width: ref.current?.offsetWidth || "70px" }}
-        >
-          Next
-        </button>
-      </div>
-    </Layout>
+            }}
+            disabled={isFetching || isError}
+            className="rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-neutral-900"
+            style={{ width: ref.current?.offsetWidth || "70px" }}
+          >
+            Next
+          </button>
+        </div>
+      </Layout>
+    </>
   );
 };
 
