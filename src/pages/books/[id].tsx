@@ -204,10 +204,11 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
             Save
           </button>
           <button
-            className="cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none"
+            className="cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
             onClick={cancel}
             tabIndex={lists.length + 2}
             ref={cancelRef}
+            disabled={isLoading}
           >
             Cancel
           </button>

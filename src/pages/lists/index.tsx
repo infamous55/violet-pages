@@ -65,7 +65,7 @@ const Lists: NextPage = () => {
       .catch(() => toast.error("Something went wrong!"));
   };
 
-  const { mutateAsync: deleteList } = trpc.list.delete.useMutation();
+  const { mutateAsync: deleteList, isLoading } = trpc.list.delete.useMutation();
   const handleDelete = async () => {
     try {
       await deleteList({ id: selectedList?.id as string });
@@ -128,14 +128,16 @@ const Lists: NextPage = () => {
                 </Dialog.Description>
                 <div>
                   <button
-                    className="mr-4 cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none"
+                    className="mr-4 cursor-pointer rounded-md border border-gray-600 py-1 px-4 focus:outline-none disabled:cursor-not-allowed disabled:text-gray-300"
                     onClick={cancel}
+                    disabled={isLoading}
                   >
                     Cancel
                   </button>
                   <button
-                    className="cursor-pointer rounded-md bg-red-700 py-1 px-4 hover:bg-red-800 focus:bg-red-800 focus:outline-none"
+                    className="cursor-pointer rounded-md bg-red-700 py-1 px-4 hover:bg-red-800 focus:bg-red-800 focus:outline-none disabled:cursor-not-allowed disabled:bg-red-900 disabled:text-gray-300"
                     onClick={handleDelete}
+                    disabled={isLoading}
                   >
                     Delete
                   </button>
