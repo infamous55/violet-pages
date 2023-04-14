@@ -69,4 +69,16 @@ export const searchRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
+  getHistory: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const history = await prisma.search.findMany({
+        where: { userId: ctx.session.user.id },
+        orderBy: { updatedAt: "desc" },
+      });
+      return history;
+    } catch (error) {
+      console.error(error);
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+  }),
 });

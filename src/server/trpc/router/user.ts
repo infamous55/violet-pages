@@ -102,4 +102,28 @@ export const userRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
+  getListInfo: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const totalLists = await prisma.list.count({
+        where: { authorId: ctx.session.user.id },
+      });
+      if (!totalLists)
+        return {
+          totalLists,
+          publicLists: 0,
+          privateLists: 0,
+        };
+      const publicLists = await prisma.list.count({
+        where: { authorId: ctx.session.user.id, public: true },
+      });
+      return {
+        totalLists,
+        publicLists,
+        privateLists: totalLists - publicLists,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+  }),
 });
