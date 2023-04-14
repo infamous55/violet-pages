@@ -57,7 +57,7 @@ const Dashboard: NextPage<{
             <h3 className="mb-2 text-2xl font-semibold">
               {listInfo.totalLists} Lists
             </h3>
-            <div className="flex gap-x-2 text-gray-300">
+            <div className="flex gap-x-2 font-semibold text-gray-300">
               <p>{listInfo.publicLists} Public</p>
               <p>{listInfo.privateLists} Private</p>
             </div>
@@ -66,6 +66,9 @@ const Dashboard: NextPage<{
             <h3 className="mb-2 text-center text-2xl font-semibold">
               Recently Searched
             </h3>
+            {!history.length && (
+              <p className="font-semibold text-gray-300">No history to show.</p>
+            )}
             {history.map((search) => (
               <div className="max-w-full">
                 <Link href={`/search?query=${search.query}`}>
