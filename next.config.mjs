@@ -5,8 +5,16 @@
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
+import nextPWA from "next-pwa";
+const withPWA = nextPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
 /** @type {import("next").NextConfig} */
-const config = {
+const config = withPWA({
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
@@ -23,5 +31,5 @@ const config = {
   experimental: {
     swcPlugins: [["next-superjson-plugin", {}]],
   },
-};
+});
 export default config;
