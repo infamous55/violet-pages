@@ -10,8 +10,8 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        session.user.setupCompleted = (user as User).setupCompleted;
-        session.user.description = (user as User).description;
+        session.user.setupCompleted = (user as unknown as User).setupCompleted;
+        session.user.description = (user as unknown as User).description;
       }
       return session;
     },

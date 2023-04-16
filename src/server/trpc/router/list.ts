@@ -83,7 +83,7 @@ export const listRouter = router({
     }),
   getBooks: protectedProcedure
     .input(z.object({ id: z.string().cuid() }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       try {
         const list = await prisma.list.findUnique({
           where: { id: input.id },

@@ -8,7 +8,7 @@ import { trpc } from "~/utils/trpc";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import DialogWindow from "~/components/DialogWindow";
 import { Dialog } from "@headlessui/react";
-import useAuth from "~/utils/useAuth";
+import withAuth from "~/utils/withAuth";
 import toast from "~/utils/toast";
 import type ListSelectItem from "~/types/list-select-item";
 import MultiSelect from "~/components/MultiSelect";
@@ -226,7 +226,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination } = await useAuth(context);
+  const { redirectDestination } = await withAuth(context);
   if (redirectDestination)
     return {
       redirect: {

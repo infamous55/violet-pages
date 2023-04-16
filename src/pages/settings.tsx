@@ -1,9 +1,9 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Head from "next/head";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import Layout from "~/components/Layout";
 import type User from "~/types/user";
-import useAuth from "~/utils/useAuth";
+import withAuth from "~/utils/withAuth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -257,7 +257,7 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination, user } = await useAuth(context);
+  const { redirectDestination, user } = await withAuth(context);
   if (redirectDestination)
     return {
       redirect: {

@@ -1,11 +1,11 @@
-import { type NextPage, type GetServerSideProps } from "next";
+import type { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import Layout from "~/components/Layout";
-import User from "~/types/user";
-import useAuth from "~/utils/useAuth";
+import type User from "~/types/user";
+import withAuth from "~/utils/withAuth";
 import { searchRouter } from "~/server/trpc/router/search";
 import { prisma } from "~/server/db/client";
-import { Search } from "@prisma/client";
+import type { Search } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
 import { trpc } from "~/utils/trpc";
@@ -70,7 +70,7 @@ const Dashboard: NextPage<{
               <p className="font-semibold text-gray-300">No history to show.</p>
             )}
             {history.map((search) => (
-              <div className="max-w-full">
+              <div className="max-w-full" key={search.query}>
                 <Link href={`/search?query=${search.query}`}>
                   <p className="overflow-x-hidden text-ellipsis whitespace-nowrap hover:text-gray-300">
                     {search.query}
@@ -86,7 +86,7 @@ const Dashboard: NextPage<{
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination, user, session } = await useAuth(context);
+  const { redirectDestination, user, session } = await withAuth(context);
   if (redirectDestination)
     return {
       redirect: {

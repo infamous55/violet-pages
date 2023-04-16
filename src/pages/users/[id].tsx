@@ -7,7 +7,7 @@ import isCUID from "~/utils/isCuid";
 import Image from "next/image";
 import type { List } from "@prisma/client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { trpc } from "~/utils/trpc";
 
 type ProfileData = {

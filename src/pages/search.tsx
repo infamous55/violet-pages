@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Layout from "~/components/Layout";
 import { env } from "~/env/server.mjs";
 import { trpc } from "~/utils/trpc";
-import useAuth from "~/utils/useAuth";
+import withAuth from "~/utils/withAuth";
 import { searchRouter } from "~/server/trpc/router/search";
 import { prisma } from "~/server/db/client";
 import Head from "next/head";
@@ -26,18 +26,10 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
   query,
   data,
 }) => {
-  if (!data)
-    return (
-      <Layout>
-        <h3 className="mb-2 text-xl font-semibold text-gray-300">
-          🔎 Searched for: <span className="text-white">{query}</span>
-        </h3>
-        <p>Something went wrong. Please try again later!</p>
-      </Layout>
-    );
-
-  const totalItems = data.totalItems;
-  const [results, setResults] = useState<SearchData | undefined>(data);
+  const totalItems = data?.totalItems;
+  const [results, setResults] = useState<SearchData | undefined>(
+    data || undefined
+  );
   const [nextResults, setNextResults] = useState<SearchData | undefined>();
   const [page, setPage] = useState<number>(1);
   let previousPage = usePrevious<number>(page);
@@ -70,7 +62,7 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
   useEffect(() => {
     previousPage = undefined;
     setPage(1);
-    setResults(data);
+    setResults(data || undefined);
     fetchNextPageResults();
   }, [data]);
 
@@ -95,6 +87,17 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
 
   const [focus, setFocus] = useState<string>();
   const ref = useRef<HTMLButtonElement>(null);
+
+  if (!data)
+    return (
+      <Layout>
+        <h3 className="mb-2 text-xl font-semibold text-gray-300">
+          🔎 Searched for: <span className="text-white">{query}</span>
+        </h3>
+        <p>Something went wrong. Please try again later!</p>
+      </Layout>
+    );
+
   return (
     <>
       <Head>
@@ -188,7 +191,7 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination, session } = await useAuth(context);
+  const { redirectDestination, session } = await withAuth(context);
   if (redirectDestination)
     return {
       redirect: {

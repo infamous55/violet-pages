@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Layout from "~/components/Layout";
 import isCUID from "~/utils/isCuid";
-import useAuth from "~/utils/useAuth";
+import withAuth from "~/utils/withAuth";
 import { prisma } from "~/server/db/client";
 import type { List, Book, Author, User } from "@prisma/client";
 import Head from "next/head";
@@ -124,7 +124,7 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
         </DialogWindow>
         <div className="mt-4"></div>
         <div>
-          {books.map((book, index) => (
+          {books.map((book) => (
             <div
               key={book.googleId}
               className="flex w-full flex-wrap justify-between border-b border-gray-600 font-semibold"
@@ -192,7 +192,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
 
-  const { user } = await useAuth(context);
+  const { user } = await withAuth(context);
   if (!list.public && list.authorId !== user?.id)
     return {
       redirect: {

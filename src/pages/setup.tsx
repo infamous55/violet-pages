@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { type NextPage, type GetServerSideProps } from "next";
-import useAuth from "~/utils/useAuth";
+import withAuth from "~/utils/withAuth";
 import type User from "~/types/user";
 import { env } from "~/env/client.mjs";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -111,8 +111,8 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
                 Welcome!<span className="select-none"> 🎉</span>
               </h3>
               <p className="mb-4">
-                It looks like you're new to this app. Please set up your account
-                by filling in the following details:
+                It looks like you&apos;re new to this app. Please set up your
+                account by filling in the following details:
               </p>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
@@ -194,7 +194,7 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination, user } = await useAuth(context);
+  const { redirectDestination, user } = await withAuth(context);
   if (redirectDestination)
     return {
       redirect: {

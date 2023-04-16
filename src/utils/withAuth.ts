@@ -11,7 +11,7 @@ const result = (
   return { redirectDestination, user, session };
 };
 
-const useAuth = async (context: GetServerSidePropsContext) => {
+const withAuth = async (context: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(context);
   const user = session?.user;
 
@@ -26,4 +26,4 @@ const useAuth = async (context: GetServerSidePropsContext) => {
   return result(null, user, session);
 };
 
-export default useAuth;
+export default withAuth;

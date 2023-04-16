@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Layout from "~/components/Layout";
-import useAuth from "~/utils/useAuth";
+import withAuth from "~/utils/withAuth";
 import {
   PlusIcon,
   ClipboardIcon,
@@ -182,7 +182,7 @@ const Lists: NextPage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { redirectDestination, user } = await useAuth(context);
+  const { redirectDestination, user } = await withAuth(context);
   if (redirectDestination)
     return {
       redirect: {
