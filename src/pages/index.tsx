@@ -83,6 +83,25 @@ const Home: NextPage = () => {
               className="w-full rounded-sm border border-gray-600 md:max-w-[50%]"
             />
           </div>
+          <div className="flex w-full flex-col-reverse items-center justify-between border-t border-gray-600 py-12 md:flex-row">
+            <Image
+              src="/description-diagram.png"
+              width={475}
+              height={250}
+              alt="screnshot"
+              className="w-full rounded-sm border border-gray-600 md:max-w-[50%]"
+            />
+            <div className="mb-8 flex w-full flex-col text-center md:mb-0 md:max-w-[40%] md:text-left">
+              <h3 className="mb-2 text-xl font-semibold text-gray-300">
+                Useful Descriptions.
+              </h3>
+              <p>
+                The book descriptions are retrieved from the Google Books API.
+                To ensure consistency, ChatGPT corrects and formats the data
+                before caching it in a Serverless Redis Database.
+              </p>
+            </div>
+          </div>
           <div className="flex w-full flex-col items-center justify-center rounded-sm border-t border-gray-600 py-12">
             <h3 className="mb-4 text-xl font-semibold text-gray-300">
               Made with the{" "}
