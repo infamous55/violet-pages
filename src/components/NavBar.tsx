@@ -58,7 +58,7 @@ const NavBar: React.FC = () => {
       )}
       {!sessionData ? (
         <button
-          className="flex rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base"
+          className="flex rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base focus:border-violet-600 focus:outline-none"
           onClick={() =>
             signIn("google", {
               callbackUrl: `${window.location.origin}/dashboard`,
