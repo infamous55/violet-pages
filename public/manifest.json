@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/dashboard",
-  "name": "RBLIT",
-  "short_name": "RBLIT",
+  "name": "Violet Pages",
+  "short_name": "Violet Pages",
   "icons": [
     {
       "src": "/icon-192x192.png",

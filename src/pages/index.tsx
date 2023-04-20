@@ -16,13 +16,20 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Dome of Cards</title>
+        <title>Violet Pages</title>
       </Head>
       <div className="min-h-screen w-full bg-neutral-900 text-white">
         <div className="mb-4 flex w-full items-center justify-center border-b border-gray-600">
           <div className="w-11/12 md:w-8/12">
             <nav className="flex h-14 w-full items-center justify-between">
-              <span className="mr-2 text-lg font-semibold">Logo</span>
+              {/* <span className="mr-2 text-lg font-semibold">Logo</span> */}
+              <Image
+                src="/favicon.png"
+                alt="logo"
+                height={40}
+                width={40}
+                className="h-10 w-10"
+              />
               <button
                 className="flex rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base focus:border-violet-600 focus:outline-none"
                 onClick={() =>
@@ -49,7 +56,7 @@ const Home: NextPage = () => {
               height={80}
               className="mb-2 h-20 w-20 rounded-full"
             />
-            <h3 className="mb-2 text-2xl font-semibold">Dome of Cards</h3>
+            <h3 className="mb-2 text-2xl font-semibold">Violet Pages</h3>
             <p className="mb-4 text-lg">
               A minimalist app to manage your readings!
             </p>
@@ -70,7 +77,7 @@ const Home: NextPage = () => {
                 Organize Books Into Lists.
               </h3>
               <p>
-                With Dome of Cards you can effortlessly create private or public
+                With Violet Pages you can effortlessly create private or public
                 lists and add books to them, allowing you to easily organize
                 your readings and share them with others.
               </p>

@@ -54,7 +54,14 @@ const NavBar: React.FC = () => {
           }}
         />
       ) : (
-        <span className="mr-2 text-lg font-semibold">Logo</span>
+        // <span className="mr-2 text-lg font-semibold">Logo</span>
+        <Image
+          src="/favicon.png"
+          alt="logo"
+          height={40}
+          width={40}
+          className="h-10 w-10"
+        />
       )}
       {!sessionData ? (
         <button
