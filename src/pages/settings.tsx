@@ -71,7 +71,10 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
         const { url, key } = await getPresignedUrl();
         await fetch(url, {
           method: "PUT",
-          headers: { "Content-Type": selectedFile.type },
+          headers: {
+            "Content-Type": selectedFile.type,
+            Origin: env.NEXT_PUBLIC_APP_URL,
+          },
           body: selectedFile,
         });
         data.image = `${env.NEXT_PUBLIC_BUCKET_URL}/${key}`;
