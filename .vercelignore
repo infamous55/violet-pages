@@ -1,0 +1,2 @@
+./src/pages/api/upload-profile-picture.ts
+./src/scripts/setup-s3-cors.js
