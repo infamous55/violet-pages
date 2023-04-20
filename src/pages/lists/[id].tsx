@@ -131,7 +131,7 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
             >
               <Link
                 href={`/books/${book.googleId}`}
-                className={`py-2 pl-2 ${
+                className={`max-w-full py-2 pl-2 pr-1 ${
                   isAuthor ? "w-fit" : "w-full hover:bg-neutral-800"
                 }`}
               >
@@ -156,7 +156,7 @@ const List: NextPage<{ list: ExtendedList; isAuthor: boolean }> = ({
               </Link>
               {isAuthor && (
                 <button
-                  className="mr-2 text-red-500"
+                  className="mx-2 mb-2 text-red-500"
                   onClick={() => handleDelete(book.googleId)}
                 >
                   <TrashIcon className="h-4 w-4" />
