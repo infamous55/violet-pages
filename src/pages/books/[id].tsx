@@ -13,6 +13,7 @@ import toast from "~/utils/toast";
 import type ListSelectItem from "~/types/list-select-item";
 import MultiSelect from "~/components/MultiSelect";
 import Head from "next/head";
+import Link from "next/link";
 
 const Book: NextPage<{ book: BookData }> = ({ book }) => {
   useEffect(() => {
@@ -191,15 +192,22 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
             <PlusCircleIcon className="-mb-0.5 mr-1 h-5 w-5 self-center text-violet-600" />{" "}
             Add book
           </Dialog.Title>
-          <MultiSelect
-            options={lists.map((list) => ({
-              value: list.id,
-              label: list.name,
-            }))}
-            selected={selectedLists}
-            setSelected={setSelectedLists}
-            className="mb-4"
-          />
+          <>
+            {!lists.length && (
+              <h3 className="font-semibold text-gray-300">
+                You don&apos;t have any lists. Try creating a new one first.
+              </h3>
+            )}
+            <MultiSelect
+              options={lists.map((list) => ({
+                value: list.id,
+                label: list.name,
+              }))}
+              selected={selectedLists}
+              setSelected={setSelectedLists}
+              className="mb-4"
+            />
+          </>
           <div>
             <button
               className=" mr-4 w-20 cursor-pointer rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none active:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-700 disabled:text-gray-300"
