@@ -60,7 +60,7 @@ const NavBar: React.FC = () => {
           alt="logo"
           height={40}
           width={40}
-          className="h-10 w-10"
+          className="h-10 w-10 select-none"
         />
       )}
       {!sessionData ? (

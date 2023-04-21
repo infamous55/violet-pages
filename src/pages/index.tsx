@@ -28,7 +28,7 @@ const Home: NextPage = () => {
                 alt="logo"
                 height={40}
                 width={40}
-                className="h-10 w-10"
+                className="h-10 w-10 select-none"
               />
               <button
                 className="flex rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base focus:border-violet-600 focus:outline-none"
@@ -54,7 +54,7 @@ const Home: NextPage = () => {
               alt="logo"
               width={80}
               height={80}
-              className="mb-2 h-20 w-20 rounded-full"
+              className="mb-2 h-20 w-20 select-none rounded-full"
             />
             <h3 className="mb-2 text-2xl font-semibold">Violet Pages</h3>
             <p className="mb-4 text-lg">
