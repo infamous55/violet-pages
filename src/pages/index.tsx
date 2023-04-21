@@ -115,7 +115,7 @@ const Home: NextPage = () => {
               </h3>
               <p>
                 Use the application from any device, without the need to
-                download or install anything.
+                download anything.
               </p>
             </div>
           </div>
