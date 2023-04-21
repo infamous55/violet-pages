@@ -90,6 +90,35 @@ const Home: NextPage = () => {
               className="w-full rounded-sm border border-gray-600 md:max-w-[50%]"
             />
           </div>
+          <div className="grid w-full grid-cols-1 place-items-center gap-12 border-t border-gray-600 py-12 text-center md:grid-cols-3 md:text-left">
+            <div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-300">
+                Open Source.
+              </h3>
+              <p>
+                The application source code is available on GitHub for anyone to
+                access and contribute to.
+              </p>
+            </div>
+            <div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-300">
+                Keyboard Accessible.
+              </h3>
+              <p>
+                Violet Pages offers an intuitive keyboard interface for
+                efficient navigation.
+              </p>
+            </div>
+            <div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-300">
+                Progressive Web App.
+              </h3>
+              <p>
+                Use the application from any device, without the need to
+                download or install anything.
+              </p>
+            </div>
+          </div>
           <div className="flex w-full flex-col-reverse items-center justify-between border-t border-gray-600 py-12 md:flex-row">
             <Image
               src="/description-diagram.png"
