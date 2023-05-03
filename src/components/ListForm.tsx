@@ -57,6 +57,7 @@ const ListForm = ({
           type="text"
           {...register("name")}
           disabled={formState.isSubmitting}
+          autoComplete="off"
         />
         <p className="text-sm text-red-500">{errors.name?.message}</p>
       </div>
@@ -71,6 +72,7 @@ const ListForm = ({
           }`}
           {...register("description")}
           disabled={formState.isSubmitting}
+          autoComplete="off"
         />
         <p className="text-sm text-red-500">{errors.description?.message}</p>
       </div>

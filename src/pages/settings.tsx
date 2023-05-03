@@ -152,6 +152,7 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
                 type="text"
                 {...register("name")}
                 disabled={formState.isSubmitting}
+                autoComplete="off"
               />
               <p className="text-sm text-red-500">
                 {errors.name?.message && errors.name?.message}
@@ -166,6 +167,7 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
                 type="text"
                 value={user.email}
                 disabled={true}
+                autoComplete="off"
               />
               <p className="text-sm text-gray-300">
                 Email address is managed by Google login.
@@ -182,6 +184,7 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
                 }`}
                 {...register("description")}
                 disabled={formState.isSubmitting}
+                autoComplete="off"
               />
               <p className="text-sm text-red-500">
                 {errors.description?.message && errors.description?.message}

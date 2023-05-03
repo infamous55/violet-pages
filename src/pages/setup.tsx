@@ -129,6 +129,7 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
                     type="text"
                     {...register("name")}
                     disabled={formState.isSubmitting}
+                    autoComplete="off"
                   />
                   <p className="text-sm text-red-500">
                     {errors.name?.message && errors.name?.message}
@@ -148,6 +149,7 @@ const Setup: NextPage<{ user: User }> = ({ user }) => {
                     }`}
                     {...register("description")}
                     disabled={formState.isSubmitting}
+                    autoComplete="off"
                   />
                   <p className="text-sm text-red-500">
                     {errors.description?.message && errors.description?.message}
