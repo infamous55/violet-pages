@@ -1,7 +1,8 @@
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { NextPage } from "next";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import NextIcon from "~/components/icons/NextIcon";
@@ -13,6 +14,17 @@ import NextAuthIcon from "~/components/icons/NextAuthIcon";
 import Link from "next/link";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const { status } = useSession();
+
+  const handleSignIn = () => {
+    if (status === "authenticated") router.push("/dashboard");
+    else
+      signIn("google", {
+        callbackUrl: `${window.location.origin}/dashboard`,
+      });
+  };
+
   return (
     <>
       <Head>
@@ -32,11 +44,7 @@ const Home: NextPage = () => {
               />
               <button
                 className="flex rounded-md border border-gray-600 bg-neutral-900 py-1 px-2 text-base focus:border-violet-600 focus:outline-none"
-                onClick={() =>
-                  signIn("google", {
-                    callbackUrl: `${window.location.origin}/dashboard`,
-                  })
-                }
+                onClick={handleSignIn}
               >
                 <FontAwesomeIcon
                   icon={faGoogle}
