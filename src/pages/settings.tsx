@@ -94,6 +94,7 @@ const Settings: NextPage<{ user: User }> = ({ user }) => {
     }
     try {
       await updateUser({ ...data, setupCompleted: true });
+      router.replace(router.asPath);
       toast.success("Account settings saved!");
     } catch {
       toast.error("Something went wrong!");
