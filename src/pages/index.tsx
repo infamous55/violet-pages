@@ -70,11 +70,7 @@ const Home: NextPage = () => {
             </p>
             <button
               className="cursor-pointer rounded-md bg-violet-600 py-1 px-4 hover:bg-violet-700 focus:bg-violet-700 focus:outline-none"
-              onClick={() =>
-                signIn("google", {
-                  callbackUrl: `${window.location.origin}/dashboard`,
-                })
-              }
+              onClick={handleSignIn}
             >
               Get started
             </button>
