@@ -1,6 +1,6 @@
 <h1 align="center">
   <br />
-  <a href="https://violet-pages-infamous55.vercel.app/" target="_blank">
+  <a href="https://violet-pages.infamous55.com/" target="_blank">
     <img src="https://raw.githubusercontent.com/infamous55/violet-pages/master/public/favicon.png" width="80" height="80" alt="Logo" />
   </a>
   <br />
