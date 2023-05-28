@@ -34,6 +34,8 @@
 - Keyboard accesibility
 - Progressive Web App (PWA)
 
+> Note: The OpenAI API is still in alpha, so it may take a while to edit a book description, and it also fails in some cases.
+
 ## Running Locally
 
 1. Clone the repository
