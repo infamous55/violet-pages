@@ -37,6 +37,7 @@ const Book: NextPage<{ book: BookData }> = ({ book }) => {
         onSuccess: (data) => {
           setDescription(data);
         },
+        retry: false,
       }
     );
 

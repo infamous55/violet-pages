@@ -15,12 +15,17 @@ export const bookRouter = router({
       try {
         const cachedDescription = await redis.get(input.id);
         if (!cachedDescription) {
-          const openaiResponse = await openai.createEdit({
-            model: "text-davinci-edit-001",
-            instruction:
-              "Edit the following text such that it follows standard grammar. Remove extra characters, remove markdown tags, remove unnecessary hyphens, use proper capitalization, and fix the punctuation. Make sure it follows a clean and correct writing style.",
-            input: input.description,
-          });
+          const openaiResponse = await openai.createEdit(
+            {
+              model: "text-davinci-edit-001",
+              instruction:
+                "Edit the following text such that it follows standard grammar. Remove extra characters, remove markdown tags, remove unnecessary hyphens, use proper capitalization, and fix the punctuation. Make sure it follows a clean and correct writing style.",
+              input: input.description,
+            },
+            {
+              timeout: 6000,
+            }
+          );
 
           await redis.set(input.id, openaiResponse.data.choices[0]?.text);
           return openaiResponse.data.choices[0]?.text;
