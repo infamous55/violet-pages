@@ -6,8 +6,8 @@ import Layout from "~/components/Layout";
 import { env } from "~/env/server.mjs";
 import { trpc } from "~/utils/trpc";
 import withAuth from "~/utils/withAuth";
-import { searchRouter } from "~/server/trpc/router/search";
-import { prisma } from "~/server/db/client";
+// import { searchRouter } from "~/server/trpc/router/search";
+// import { prisma } from "~/server/db/client";
 import Head from "next/head";
 
 function usePrevious<T>(value: T) {
@@ -26,6 +26,15 @@ const Search: NextPage<{ query: string; data: SearchData | null }> = ({
   query,
   data,
 }) => {
+  const hasFired = useRef(false);
+  const { mutate, isIdle } = trpc.search.addToHistory.useMutation();
+  useEffect(() => {
+    if (isIdle && !hasFired.current) {
+      hasFired.current = true;
+      mutate({ query });
+    }
+  }, [query, mutate, isIdle]);
+
   const totalItems = data?.totalItems;
   const [results, setResults] = useState<SearchData | undefined>(
     data || undefined
@@ -209,8 +218,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
 
-  const caller = searchRouter.createCaller({ prisma, session });
-  await caller.addToHistory({ query });
+  // const caller = searchRouter.createCaller({ prisma, session });
+  // await caller.addToHistory({ query });
 
   try {
     const response = await fetch(
