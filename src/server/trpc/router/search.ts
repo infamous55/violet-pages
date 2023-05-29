@@ -45,7 +45,6 @@ export const searchRouter = router({
         const searchCount = await prisma.search.count({
           where: {
             userId: ctx.session.user.id,
-            query: input.query,
           },
         });
         if (searchCount >= 5) {
