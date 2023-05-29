@@ -42,7 +42,12 @@ export const searchRouter = router({
           });
           return updatedSearch;
         }
-        const searchCount = await prisma.search.count();
+        const searchCount = await prisma.search.count({
+          where: {
+            userId: ctx.session.user.id,
+            query: input.query,
+          },
+        });
         if (searchCount >= 5) {
           const oldestSearch = await prisma.search.findFirst({
             where: { userId: ctx.session.user.id },
