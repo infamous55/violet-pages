@@ -15,20 +15,26 @@ export const bookRouter = router({
       try {
         const cachedDescription = await redis.get(input.id);
         if (!cachedDescription) {
-          const openaiResponse = await openai.createEdit(
-            {
-              model: "text-davinci-edit-001",
-              instruction:
-                "Edit the following text such that it follows standard grammar. Remove extra characters, remove markdown tags, remove unnecessary hyphens, use proper capitalization, and fix the punctuation. Make sure it follows a clean and correct writing style.",
-              input: input.description,
-            },
-            {
-              timeout: 6000,
-            }
+          const openaiResponse = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                role: "system",
+                content:
+                  "Edit the following text such that it follows standard grammar. Remove extra characters, remove markdown tags, remove unnecessary hyphens, use proper capitalization, and fix the punctuation. Make sure it follows a clean and correct writing style. If it is too long, summarize it.",
+              },
+              {
+                role: "user",
+                content: input.description,
+              },
+            ],
+            max_tokens: 2048,
+          });
+          await redis.set(
+            input.id,
+            openaiResponse.data.choices[0]?.message?.content
           );
-
-          await redis.set(input.id, openaiResponse.data.choices[0]?.text);
-          return openaiResponse.data.choices[0]?.text;
+          return openaiResponse.data.choices[0]?.message?.content;
         }
         return cachedDescription as string;
       } catch (error) {

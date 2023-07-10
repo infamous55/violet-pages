@@ -13,7 +13,6 @@ import toast from "~/utils/toast";
 import type ListSelectItem from "~/types/list-select-item";
 import MultiSelect from "~/components/MultiSelect";
 import Head from "next/head";
-import Link from "next/link";
 
 const Book: NextPage<{ book: BookData }> = ({ book }) => {
   useEffect(() => {

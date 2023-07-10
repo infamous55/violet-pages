@@ -30,11 +30,9 @@
 - Ability to organize books into lists
 - Public and private list options
 - Book data retrieved from Google Books API
-- Book descriptions edited by GPT-3, then cached
+- Book descriptions edited by GPT-3.5, then cached
 - Keyboard accesibility
 - Progressive Web App (PWA)
-
-> Note: The OpenAI API is still in alpha, so it may take a while to edit a book description, and it also fails in some cases.
 
 ## Running Locally
 
@@ -64,6 +62,7 @@ pnpm run dev
 
 ## To Do
 
+- [x] Move to the new OpenAI Completions API
 - [ ] Improve validation of file uploads
 - [ ] Add the ability to order books inside a list
 
