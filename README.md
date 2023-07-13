@@ -62,7 +62,7 @@ pnpm run dev
 
 ## To Do
 
-- [x] Move to the new OpenAI Completions API
+- [x] ~~Move to the new OpenAI Completions API~~
 - [ ] Improve validation of file uploads
 - [ ] Add the ability to order books inside a list
 
