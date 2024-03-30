@@ -1,8 +1,8 @@
+> ### IMPORTANT:<br/>This project is currently down and awaiting a full rewrite.
+
 <h1 align="center">
   <br />
-  <a href="https://violet-pages.infamous55.com/" target="_blank">
-    <img src="https://raw.githubusercontent.com/infamous55/violet-pages/master/public/favicon.png" width="80" height="80" alt="Logo" />
-  </a>
+  <img src="https://raw.githubusercontent.com/infamous55/violet-pages/master/public/favicon.png" width="80" height="80" alt="Logo" />
   <br />
   Violet Pages
   <br />
